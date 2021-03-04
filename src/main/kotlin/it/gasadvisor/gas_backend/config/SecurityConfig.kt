@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import it.gasadvisor.gas_backend.util.JwtHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -13,8 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
-@Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig @Autowired constructor(
     private val mapper: ObjectMapper,
     private val jwtHelper: JwtHelper
@@ -26,13 +26,16 @@ class SecurityConfig @Autowired constructor(
     }
 
     override fun configure(http: HttpSecurity) {
-        http.csrf().disable()
-            .authorizeRequests()
-            .and().addFilter(AuthenticationFilter(authenticationManager(), mapper, jwtHelper))
+        http.authorizeRequests()
+            .antMatchers("/test").permitAll()
+            .antMatchers("/api/**").authenticated()
+            .anyRequest().permitAll()
+            .and().exceptionHandling().authenticationEntryPoint(AuthenticationEntrypointConfig())
+            .and().cors()
+            .and().csrf().disable()
+            .addFilter(AuthenticationFilter(authenticationManager(), mapper, jwtHelper))
             .addFilterAfter(AuthorizationFilter(jwtHelper), AuthenticationFilter::class.java).anonymous().and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests().antMatchers("/api/**").authenticated()
     }
 
     override fun configure(web: WebSecurity) {
@@ -46,7 +49,6 @@ class SecurityConfig @Autowired constructor(
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**",
-            "/test",
             "/public/**"
         )
     }
