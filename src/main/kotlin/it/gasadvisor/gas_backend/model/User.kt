@@ -7,6 +7,9 @@ import javax.validation.constraints.Size
 @Entity
 @Table(name = "user")
 data class User(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
 
     @Column(unique = true, nullable = false)
     var username: String,
@@ -20,8 +23,4 @@ data class User(
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     var role: Role
 
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
-}
+)

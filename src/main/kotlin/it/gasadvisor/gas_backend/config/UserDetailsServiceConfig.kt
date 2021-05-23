@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
 @Component
 class UserDetailsServiceConfig @Autowired constructor(
@@ -13,11 +12,7 @@ class UserDetailsServiceConfig @Autowired constructor(
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String?): UserDetails {
-        val user = service.findByUsername(username.orEmpty())
-        val roleId = user.role.id
-        println("user role id is $roleId")
-        val privileges = service.getUserPrivilegesByRoleId(roleId)
-        println(privileges)
+        val user = service.findByUsernameFetchAuthorities(username.orEmpty())
         return UserDetailsConfig(user)
     }
 }

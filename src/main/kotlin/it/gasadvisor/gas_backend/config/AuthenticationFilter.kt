@@ -27,6 +27,7 @@ class AuthenticationFilter(
             log.info("Invalid login request received. Could not be parsed. ${e.message}" )
             AuthenticationRequest("", "")
         }
+        log.debug("attempting authentication")
         val authToken = UsernamePasswordAuthenticationToken(authRequest.username, authRequest.password)
         return authManager.authenticate(authToken)
     }

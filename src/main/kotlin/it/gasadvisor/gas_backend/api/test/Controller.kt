@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
 class Controller {
 
-    @GetMapping("api/test")
+    @GetMapping("test")
     @ResponseStatus(HttpStatus.OK)
     fun test(): String {
 

@@ -50,7 +50,7 @@ class SecurityConfig @Autowired constructor(
 
     @Bean
     fun corsConfigurationSource(
-        @Value("\${it.gasadvisor.allowedOrigins:*}") allowedOrigins: Array<String?>
+        @Value("\${it.gasadvisor.allowedOrigins:*}") allowedOrigins: Array<String>
     ): CorsConfigurationSource? {
         val configuration = CorsConfiguration()
         configuration.allowedOrigins = listOf(*allowedOrigins)
@@ -71,8 +71,7 @@ class SecurityConfig @Autowired constructor(
             "/swagger-resources/configuration/security",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**",
-            "/public/**"
+            "/webjars/**"
         )
     }
 }

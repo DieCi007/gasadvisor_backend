@@ -1,10 +1,12 @@
 package it.gasadvisor.gas_backend.model
-
 import javax.persistence.*
 
 @Entity
 @Table(name = "privilege")
 data class Privilege(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
 
     @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
@@ -14,13 +16,8 @@ data class Privilege(
     var description: String,
 
     @ManyToMany(mappedBy = "privileges")
-    var roles: Set<Role> = HashSet(0)
-) {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0
-
-}
+    var roles: Set<Role>
+)
 
 enum class PrivilegeName {
     READ_ALL, WRITE_ALL

@@ -1,15 +1,15 @@
 package it.gasadvisor.gas_backend.api.auth.service
 
-import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.exception.UserNotFoundException
-import it.gasadvisor.gas_backend.model.*
+import it.gasadvisor.gas_backend.model.Role
+import it.gasadvisor.gas_backend.model.RoleName
+import it.gasadvisor.gas_backend.model.User
 import it.gasadvisor.gas_backend.repository.PrivilegeRepository
 import it.gasadvisor.gas_backend.repository.RoleRepository
 import it.gasadvisor.gas_backend.repository.UserRepository
-import org.hibernate.Hibernate
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import javax.annotation.PostConstruct
 
 @Service
@@ -19,13 +19,9 @@ class AuthenticationService @Autowired constructor(
     private val privilegeRepository: PrivilegeRepository
 ) {
 
-    fun findByUsername(username: String): User {
+    fun findByUsernameFetchAuthorities(username: String): User {
         return repository.findByUsername(username)
             .orElseThrow { throw UserNotFoundException("User $username not found") }
-    }
-
-    fun getUserPrivilegesByRoleId(roleId: Int): List<Privilege> {
-        return roleRepository.getPrivileges(roleId)
     }
 
     @PostConstruct
@@ -35,15 +31,17 @@ class AuthenticationService @Autowired constructor(
 //        val c = roleRepository.save(Role(name = RoleName.ADMIN, privileges = setOf(a, b)))
 //        roleRepository.save(Role(name = RoleName.END_USER))
 //        roleRepository.save(Role(name = RoleName.GUEST))
-//        repository.findByUsername("admin").orElseGet {
-//            repository.save(
-//                User(
-//                    username = "admin",
-//                    password = "\$2y\$10\$WZk8io6VFSEe1CzBkl3V2OyxD7n.BRmnoBvCh6efSw8LhTXcDpNkK",
-//                    role = c
-//                )
-//            )
-//        }
+        val role = Role(null, RoleName.ADMIN, emptySet(), emptySet())
+        role.id = 1
+        repository.findByUsername("admin").orElseGet {
+            repository.save(
+                User(
+                    username = "admin",
+                    password = BCryptPasswordEncoder(10).encode("admin"),
+                    role = role
+                )
+            )
+        }
     }
 
 }
