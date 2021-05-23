@@ -3,7 +3,9 @@ package it.gasadvisor.gas_backend.config
 import com.fasterxml.jackson.databind.ObjectMapper
 import it.gasadvisor.gas_backend.util.JwtHelper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
@@ -12,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,6 +30,11 @@ class SecurityConfig @Autowired constructor(
         return BCryptPasswordEncoder(10)
     }
 
+    @Bean
+    fun getAuthManager(): AuthenticationManager {
+        return super.authenticationManager()
+    }
+
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
             .antMatchers("/test").permitAll()
@@ -36,6 +46,19 @@ class SecurityConfig @Autowired constructor(
             .addFilter(AuthenticationFilter(authenticationManager(), mapper, jwtHelper))
             .addFilterAfter(AuthorizationFilter(jwtHelper), AuthenticationFilter::class.java).anonymous().and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    }
+
+    @Bean
+    fun corsConfigurationSource(
+        @Value("\${it.gasadvisor.allowedOrigins:*}") allowedOrigins: Array<String?>
+    ): CorsConfigurationSource? {
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf(*allowedOrigins)
+        configuration.allowedMethods = listOf("*")
+        configuration.allowedHeaders = listOf("*")
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", configuration)
+        return source
     }
 
     override fun configure(web: WebSecurity) {

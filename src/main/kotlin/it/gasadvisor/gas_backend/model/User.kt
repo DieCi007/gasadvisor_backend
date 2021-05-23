@@ -1,25 +1,27 @@
 package it.gasadvisor.gas_backend.model
 
-import it.gasadvisor.gas_backend.api.auth.domain.UserRole
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
 @Entity
-@Table
+@Table(name = "user")
 data class User(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     var username: String,
 
     @NotBlank
     @Size(min = 6)
-    @Column
+    @Column(nullable = false)
     var password: String,
 
-    @Enumerated(EnumType.STRING)
-    var role: UserRole
-)
+    @NotBlank
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    var role: Role
+
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long = 0
+}

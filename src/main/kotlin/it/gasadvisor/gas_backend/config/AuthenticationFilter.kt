@@ -39,4 +39,5 @@ class AuthenticationFilter(
     ) {
         response.addHeader("Authorization", jwtHelper.createJwt(authResult.name, authResult.authorities))
     }
+
 }

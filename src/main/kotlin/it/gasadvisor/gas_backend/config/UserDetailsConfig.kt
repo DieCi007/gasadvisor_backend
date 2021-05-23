@@ -6,10 +6,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class UserDetailsConfig(
-   private val user: User
+    private val user: User
 ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableSetOf(SimpleGrantedAuthority(user.role.name))
+        return mutableListOf(SimpleGrantedAuthority("diego"))
     }
 
     override fun getPassword(): String {
