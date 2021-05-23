@@ -39,8 +39,9 @@ class AuthorizationFilter constructor(
         }
 
         val username = claims.subject
-        val jwtAuthorities = claims["authority"] as List<Map<String, String>>
-        val authorities = jwtAuthorities.map { m -> SimpleGrantedAuthority(m["authority"]) }.toSet()
+        val jwtAuthorities = claims[JwtHelper.AUTHORITIES_CLAIM] as List<*>
+        val authorities = jwtAuthorities.map { m -> SimpleGrantedAuthority(m as String) }.toSet()
+
         val authentication = UsernamePasswordAuthenticationToken(username, null, authorities)
         log.info("incoming request from $username")
         SecurityContextHolder.getContext().authentication = authentication

@@ -19,9 +19,9 @@ class JwtHelper {
     @Value("\${jwt.secure.key}")
     val key: String = ""
 
-    fun createJwt(user: String, authority: MutableCollection<out GrantedAuthority>): String {
+    fun createJwt(user: String, authorities: MutableCollection<out GrantedAuthority>): String {
         return Jwts.builder().setSubject(user)
-            .claim("authority", authority)
+            .claim(AUTHORITIES_CLAIM, authorities.map { grantedAuthority -> grantedAuthority.authority })
             .setIssuedAt(Date())
             .setExpiration(Date.from(Instant.now().plus(Duration.ofDays(days))))
             .signWith(Keys.hmacShaKeyFor(key.toByteArray())).compact()
@@ -33,5 +33,7 @@ class JwtHelper {
             .build().parseClaimsJws(token)
         return claimsJws.body
     }
-
+    companion object {
+        const val AUTHORITIES_CLAIM = "authorities"
+    }
 }

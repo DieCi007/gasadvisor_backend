@@ -4,8 +4,6 @@ import it.gasadvisor.gas_backend.exception.UserNotFoundException
 import it.gasadvisor.gas_backend.model.Role
 import it.gasadvisor.gas_backend.model.RoleName
 import it.gasadvisor.gas_backend.model.User
-import it.gasadvisor.gas_backend.repository.PrivilegeRepository
-import it.gasadvisor.gas_backend.repository.RoleRepository
 import it.gasadvisor.gas_backend.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -14,13 +12,11 @@ import javax.annotation.PostConstruct
 
 @Service
 class AuthenticationService @Autowired constructor(
-    private val repository: UserRepository,
-    private val roleRepository: RoleRepository,
-    private val privilegeRepository: PrivilegeRepository
+    private val repository: UserRepository
 ) {
 
     fun findByUsernameFetchAuthorities(username: String): User {
-        return repository.findByUsername(username)
+        return repository.findByUsernameFetchAuthorities(username)
             .orElseThrow { throw UserNotFoundException("User $username not found") }
     }
 

@@ -6,7 +6,7 @@ import javax.validation.constraints.Size
 
 @Entity
 @Table(name = "user")
-data class User(
+class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,

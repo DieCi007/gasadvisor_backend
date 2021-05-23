@@ -3,7 +3,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "role")
-data class Role(
+class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
@@ -12,12 +12,7 @@ data class Role(
     @Column(nullable = false, unique = true)
     var name: RoleName,
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "role_has_privilege",
-        joinColumns = [JoinColumn(name = "role_id", nullable = false)],
-        inverseJoinColumns = [JoinColumn(name = "privilege_id", nullable = false)]
-    )
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     var privileges: Set<Privilege>,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")

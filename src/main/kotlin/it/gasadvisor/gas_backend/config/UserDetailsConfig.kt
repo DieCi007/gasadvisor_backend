@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.config
-
 import it.gasadvisor.gas_backend.model.User
+import org.hibernate.Hibernate
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -10,6 +10,7 @@ class UserDetailsConfig(
 ) : UserDetails {
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        Hibernate.initialize(user.role.privileges)
         return user.role.privileges.map { privilege ->  SimpleGrantedAuthority(privilege.name.name)}.toMutableList()
     }
 
