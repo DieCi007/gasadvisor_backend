@@ -13,6 +13,6 @@ class UserDetailsServiceConfig @Autowired constructor(
 
     override fun loadUserByUsername(username: String?): UserDetails {
         val user = service.findByUsernameFetchAuthorities(username.orEmpty())
-        return UserDetailsConfig(user)
+        return AppUserDetails(user)
     }
 }

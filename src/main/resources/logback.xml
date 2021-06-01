@@ -1,7 +1,12 @@
 <configuration>
     <property name="debug" value="logs/debug.log"/>
-    <property name="info" value="logs/info.log"/>
     <property name="app" value="logs/app.log"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %p %c{1.} [%t] %m%n</pattern>
+        </encoder>
+    </appender>
 
     <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${debug}</file>
@@ -42,6 +47,9 @@
 
     <root level="error">
         <appender-ref ref="app"/>
+    </root>
+    <root level="trace">
+        <appender-ref ref="STDOUT"/>
     </root>
 
 </configuration>
