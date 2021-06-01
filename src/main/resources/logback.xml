@@ -48,8 +48,8 @@
     <root level="error">
         <appender-ref ref="app"/>
     </root>
-    <root level="trace">
+    <logger name="it.gasadvisor.gas_backend" level="debug">
         <appender-ref ref="STDOUT"/>
-    </root>
+    </logger>
 
 </configuration>

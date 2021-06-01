@@ -12,11 +12,16 @@ class Role(
     @Column(nullable = false, unique = true)
     var name: RoleName,
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "role_has_privilege",
+        joinColumns = [JoinColumn(name = "role_id", nullable = false)],
+        inverseJoinColumns = [JoinColumn(name = "privilege_id", nullable = false)]
+    )
     var privileges: Set<Privilege>,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
-    var users: Set<User>
+    var users: Set<User> = emptySet()
 )
 
 enum class RoleName {

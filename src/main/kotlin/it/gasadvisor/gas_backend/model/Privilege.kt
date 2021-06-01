@@ -15,13 +15,8 @@ class Privilege(
     @Column(nullable = false)
     var description: String,
 
-    @ManyToMany
-    @JoinTable(
-        name = "role_has_privilege",
-        joinColumns = [JoinColumn(name = "privilege_id", nullable = false)],
-        inverseJoinColumns = [JoinColumn(name = "role_id", nullable = false)]
-    )
-    var roles: Set<Role>
+    @ManyToMany(mappedBy = "privileges")
+    var roles: Set<Role> = emptySet()
 )
 
 enum class PrivilegeName {
