@@ -51,6 +51,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     implementation("ch.qos.logback:logback-core")
     testImplementation("com.github.tomakehurst:wiremock:2.19.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
 
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
@@ -66,4 +67,16 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    languageVersion = "1.5"
+}
+
+tasks{
+    withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs = listOf("-Xskip-prerelease-check")
+        }
+    }
 }

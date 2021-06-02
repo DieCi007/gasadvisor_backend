@@ -1,8 +1,8 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.Role
+import it.gasadvisor.gas_backend.model.GasStation
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface RoleRepository : JpaRepository<Role, Int>
+interface GasStationRepository : JpaRepository<GasStation, Long>

@@ -27,17 +27,17 @@ class AuthenticationService @Autowired constructor(
 //        val c = roleRepository.save(Role(name = RoleName.ADMIN, privileges = setOf(a, b)))
 //        roleRepository.save(Role(name = RoleName.END_USER))
 //        roleRepository.save(Role(name = RoleName.GUEST))
-        val role = Role(null, RoleName.ADMIN, emptySet(), emptySet())
-        role.id = 1
-        repository.findByUsername("admin").orElseGet {
-            repository.save(
-                User(
-                    username = "admin",
-                    password = BCryptPasswordEncoder(10).encode("admin"),
-                    role = role
-                )
-            )
-        }
+//        val role = Role(null, RoleName.ADMIN, emptySet(), emptySet())
+//        role.id = 1
+//        repository.findByUsername("admin").orElseGet {
+//            repository.save(
+//                User(
+//                    username = "admin",
+//                    password = BCryptPasswordEncoder(10).encode("admin"),
+//                    role = role
+//                )
+//            )
+//        }
     }
 
 }
