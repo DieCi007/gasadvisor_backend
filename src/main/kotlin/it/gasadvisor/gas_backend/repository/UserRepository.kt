@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
 
-interface UserRepository : JpaRepository<User, Long> {
+interface UserRepository : JpaRepository<User, String> {
     fun findByUsername(username: String): Optional<User>
 
     @Query("select u from User u left join fetch u.role r join fetch r.privileges where u.username = :username")

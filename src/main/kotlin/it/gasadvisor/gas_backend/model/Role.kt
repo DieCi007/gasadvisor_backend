@@ -5,11 +5,8 @@ import javax.persistence.*
 @Table(name = "role")
 class Role(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null,
-
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
+    @Column(length = 48)
     var name: RoleName,
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -18,7 +15,7 @@ class Role(
         joinColumns = [JoinColumn(name = "role_id", nullable = false)],
         inverseJoinColumns = [JoinColumn(name = "privilege_id", nullable = false)]
     )
-    var privileges: Set<Privilege>,
+    var privileges: Set<Privilege> = emptySet(),
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
     var users: Set<User> = emptySet()

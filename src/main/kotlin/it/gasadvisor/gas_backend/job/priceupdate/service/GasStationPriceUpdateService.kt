@@ -10,7 +10,7 @@ abstract class GasStationPriceUpdateService<T> constructor(
 ) {
     companion object : Log()
 
-    fun handle(br: BufferedReader) {
+    open fun handle(br: BufferedReader) {
         var totalSkipped = 0
         var totalSaved = 0
         var currentIndex = 0

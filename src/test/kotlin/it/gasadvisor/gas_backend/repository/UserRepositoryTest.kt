@@ -2,6 +2,7 @@ package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.model.*
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,31 +20,23 @@ class UserRepositoryTest @Autowired constructor(
 ) {
     private val privilege = Privilege(name = PrivilegeName.WRITE_ALL, description = "description")
     private val role = Role(name = RoleName.GUEST, privileges = setOf(privilege))
-    private val user = User(null, "user", "pass", role)
+    private val user = User( "user", "pass", role)
 
     @BeforeEach
-    fun clearDB() {
-        userRepo.deleteAllInBatch()
-        roleRepo.deleteAllInBatch()
-        privilegeRepo.deleteAllInBatch()
+    fun addDB() {
+        privilegeRepo.save(privilege)
+        roleRepo.save(role)
+        userRepo.save(user)
     }
 
     @Test
     fun `should find by username`() {
-        privilegeRepo.save(privilege)
-        roleRepo.save(role)
-        userRepo.save(user)
-
         val userFound = userRepo.findByUsername("user")
-        assertThat(userFound.get()).isEqualTo(user)
+        assertThat(userFound.get().username).isEqualTo(user.username)
     }
 
     @Test
     fun `should find by username and get authorities`() {
-        privilegeRepo.save(privilege)
-        roleRepo.save(role)
-        userRepo.save(user)
-
         val userFound = userRepo.findByUsernameFetchAuthorities("user")
         assertThat(userFound.get().role.privileges).anyMatch { e -> e.name == privilege.name }
     }

@@ -5,15 +5,12 @@ import javax.persistence.*
 @Table(name = "privilege")
 class Privilege(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
-
-    @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
+    @Column(length = 48)
     var name: PrivilegeName,
 
     @Column(nullable = false)
-    var description: String,
+    var description: String?,
 
     @ManyToMany(mappedBy = "privileges")
     var roles: Set<Role> = emptySet()
