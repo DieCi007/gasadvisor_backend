@@ -11,6 +11,7 @@ abstract class GasStationPriceUpdateService<T> constructor(
     companion object : Log()
 
     open fun handle(br: BufferedReader) {
+        val timeInit = System.currentTimeMillis()
         var totalSkipped = 0
         var totalSaved = 0
         var currentIndex = 0
@@ -45,6 +46,7 @@ abstract class GasStationPriceUpdateService<T> constructor(
             totalSaved++
         }
         log.info("Saved $totalSaved rows. Skipped $totalSkipped")
+        log.info("Operation completed in ${(System.currentTimeMillis() - timeInit)/1000} seconds")
     }
 
     private fun handleNewLine(line: String): Optional<T> {
