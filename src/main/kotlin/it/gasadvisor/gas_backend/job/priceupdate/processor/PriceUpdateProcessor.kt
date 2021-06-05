@@ -13,10 +13,9 @@ import java.net.URL
 @Component
 @Qualifier("priceUpdateProcessor")
 class PriceUpdateProcessor @Autowired constructor(
-    private val priceUpdateService: PriceUpdateService
+    private val priceUpdateService: PriceUpdateService,
+    @Value("\${url.price}") private var endpoint: String
 ) : GasStationPriceUpdateProcessor {
-    @Value("\${url.price}")
-    lateinit var endpoint: String
 
     companion object : Log()
 

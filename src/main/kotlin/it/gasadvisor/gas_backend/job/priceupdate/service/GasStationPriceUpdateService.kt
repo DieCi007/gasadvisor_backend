@@ -38,7 +38,7 @@ abstract class GasStationPriceUpdateService<T> constructor(
                 listToSave.clear()
             }
             currentLine = br.readLine()
-            if (currentLine == null) {
+            if (currentLine == null && listToSave.size > 0) {
                 saveAll(listToSave)
                 listToSave.clear()
             }

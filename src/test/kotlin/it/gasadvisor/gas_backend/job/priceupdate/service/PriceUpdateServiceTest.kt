@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.priceupdate.service
 
-import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
+import it.gasadvisor.gas_backend.api.gas.price.service.GasPriceService
 import it.gasadvisor.gas_backend.exception.NotFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,36 +15,35 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 @ExtendWith(MockitoExtension::class)
-internal class GasStationUpdateServiceTest {
-
+internal class PriceUpdateServiceTest {
     @Mock
-    lateinit var stationService: GasStationService
+    lateinit var priceService: GasPriceService
     private val delimiter = ";"
-    private lateinit var updateService: GasStationUpdateService
+    private lateinit var updateService: PriceUpdateService
 
     @BeforeEach
     fun setUp() {
-        updateService = GasStationUpdateService(stationService, delimiter)
+        updateService = PriceUpdateService(priceService, delimiter)
     }
 
     @Test
     fun `should save all when correct csv`() {
-        val fileStream = this::class.java.classLoader.getResourceAsStream("fixtures/station/station-correct.csv")
+        val fileStream = this::class.java.classLoader.getResourceAsStream("fixtures/price/price-correct.csv")
             ?: throw NotFoundException("file not found")
         val bufferedReader = BufferedReader(InputStreamReader(fileStream))
         updateService.handle(bufferedReader)
 
-        verify(stationService, times(1)).saveAll(any())
+        verify(priceService, times(1)).saveAll(any())
     }
 
     @Test
     fun `should not save when bad formatted data`() {
-        val fileStream = this::class.java.classLoader.getResourceAsStream("fixtures/station/station-incorrect.csv")
+        val fileStream = this::class.java.classLoader.getResourceAsStream("fixtures/price/price-incorrect.csv")
             ?: throw NotFoundException("file not found")
         val bufferedReader = BufferedReader(InputStreamReader(fileStream))
         updateService.handle(bufferedReader)
 
-        verifyZeroInteractions(stationService)
+        verifyZeroInteractions(priceService)
     }
 
 }

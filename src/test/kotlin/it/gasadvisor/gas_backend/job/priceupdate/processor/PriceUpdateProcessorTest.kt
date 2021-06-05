@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.priceupdate.processor
 
-import it.gasadvisor.gas_backend.job.priceupdate.service.GasStationUpdateService
+import it.gasadvisor.gas_backend.job.priceupdate.service.PriceUpdateService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -10,20 +10,20 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 
 @ExtendWith(MockitoExtension::class)
-internal class GasStationUpdateProcessorTest {
+internal class PriceUpdateProcessorTest {
     @Mock
-    lateinit var gasStationService: GasStationUpdateService
-    private val endpoint = "https://www.mise.gov.it/images/exportCSV/anagrafica_impianti_attivi.csv"
-    lateinit var processor: GasStationUpdateProcessor
+    lateinit var gasPriceUpdateService: PriceUpdateService
+    private val endpoint = "https://www.mise.gov.it/images/exportCSV/prezzo_alle_8.csv"
+    lateinit var processor: PriceUpdateProcessor
 
     @BeforeEach
     fun setUp() {
-        processor = GasStationUpdateProcessor(gasStationService, endpoint)
+        processor = PriceUpdateProcessor(gasPriceUpdateService, endpoint)
     }
 
     @Test
     fun `should get file stream`() {
         processor.update()
-        verify(gasStationService).handle(any())
+        verify(gasPriceUpdateService).handle(any())
     }
 }
