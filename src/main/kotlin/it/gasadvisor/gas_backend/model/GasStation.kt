@@ -1,9 +1,6 @@
 package it.gasadvisor.gas_backend.model
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "gas_station")
@@ -20,5 +17,14 @@ class GasStation(
     @Column(nullable = false)
     var latitude: Double,
     @Column(nullable = false)
-    var longitude: Double
-)
+    var longitude: Double,
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id.gasStation")
+    var prices: Set<GasPrice> = emptySet()
+
+) {
+    constructor(id: Long) : this(
+        id, "", "", "", "", "",
+        "", "", 0.0, 0.0
+    )
+}
