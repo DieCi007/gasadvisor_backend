@@ -7,8 +7,10 @@ import javax.persistence.*
 class GasPrice(
     @EmbeddedId
     var id: GasPriceId,
-
     var price: Double,
-
-)
+    ) {
+    override fun toString(): String {
+        return "GasPrice(date=${id.readDate}, description=${id.description}, price=$price)"
+    }
+}
 

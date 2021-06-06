@@ -4,11 +4,12 @@ import java.io.Serializable
 import java.time.Instant
 import javax.persistence.Column
 import javax.persistence.Embeddable
+import javax.persistence.FetchType
 import javax.persistence.ManyToOne
 
 @Embeddable
 class GasPriceId(
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     var gasStation: GasStation,
     var isSelf: Boolean,
     var readDate: Instant,
