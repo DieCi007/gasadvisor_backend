@@ -36,6 +36,8 @@ class SecurityConfig @Autowired constructor(
     }
 
     override fun configure(http: HttpSecurity) {
+        val authenticationFilter = AuthenticationFilter(getAuthManager(), mapper, jwtHelper)
+        authenticationFilter.setFilterProcessesUrl("/api/v1/login")
         http.authorizeRequests()
 //            .antMatchers("/test").permitAll()
 //            .antMatchers("/api/**").authenticated()
@@ -43,7 +45,7 @@ class SecurityConfig @Autowired constructor(
             .and().exceptionHandling().authenticationEntryPoint(AuthenticationEntrypointConfig())
             .and().cors()
             .and().csrf().disable()
-            .addFilter(AuthenticationFilter(authenticationManager(), mapper, jwtHelper))
+            .addFilter(authenticationFilter)
             .addFilterAfter(AuthorizationFilter(jwtHelper), AuthenticationFilter::class.java).anonymous().and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }

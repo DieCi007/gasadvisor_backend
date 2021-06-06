@@ -10,6 +10,7 @@ import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -54,7 +55,7 @@ class GlobalErrorHandler {
         return fromException(ex, request, HttpStatus.BAD_REQUEST)
     }
 
-    @ExceptionHandler(value = [ExpiredJwtException::class, UnauthorizedException::class,
+    @ExceptionHandler(value = [ExpiredJwtException::class, UnauthorizedException::class, AccessDeniedException::class,
     MalformedJwtException::class, HttpClientErrorException.Unauthorized::class, SignatureException::class])
     @ResponseBody
     fun jwtException(ex: Exception, request: WebRequest): ResponseEntity<Map<String, Any>> {

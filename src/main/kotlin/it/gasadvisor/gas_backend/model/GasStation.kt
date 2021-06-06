@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import javax.persistence.*
 
 @Entity
@@ -20,6 +21,7 @@ class GasStation(
     var longitude: Double,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "id.gasStation")
+    @JsonIgnoreProperties(value = ["gasStation"], allowSetters = true)
     var prices: Set<GasPrice> = emptySet()
 
 ) {

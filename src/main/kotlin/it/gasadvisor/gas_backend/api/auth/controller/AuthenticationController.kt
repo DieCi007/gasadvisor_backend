@@ -11,7 +11,7 @@ import javax.validation.Valid
 @RestController
 class AuthenticationController {
 
-    @PostMapping("login")
+    @PostMapping("/api/v1/login")
     @ResponseStatus(HttpStatus.OK)
     fun login(@RequestBody @Valid request: AuthenticationRequest) {
 

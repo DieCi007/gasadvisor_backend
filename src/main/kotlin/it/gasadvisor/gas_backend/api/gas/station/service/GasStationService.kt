@@ -1,13 +1,13 @@
 package it.gasadvisor.gas_backend.api.gas.station.service
 
-import it.gasadvisor.gas_backend.api.gas.station.contract.GetAllStationsResponse
-import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationDataResponse
-import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationPriceResponse
+import it.gasadvisor.gas_backend.api.gas.station.contract.*
 import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.model.GasStation
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -34,4 +34,17 @@ class GasStationService @Autowired constructor(
         return repository.getStationData(stationId).orElseThrow { NotFoundException("Station with given id not found") }
     }
 
+    fun findAllPaginated(page: Int?, size: Int?, sortBy: String?, sortType: SortType?): PaginatedResponse<GasStationResponse> {
+        var sort = if (sortBy == null) Sort.by("id") else Sort.by(sortBy)
+        sort = if (sortType == null || sortType == SortType.ASC) sort.ascending() else sort.descending()
+        val pageRequest =
+            if (page == null || size == null) PageRequest.of(0, 10, sort) else PageRequest.of(page, size, sort)
+        val result = repository.findAllPaginated(pageRequest)
+        return PaginatedResponse(pageRequest.pageNumber, pageRequest.pageSize,
+        result.totalElements, result.totalPages, result.content)
+    }
+}
+
+enum class SortType {
+    ASC, DESC
 }
