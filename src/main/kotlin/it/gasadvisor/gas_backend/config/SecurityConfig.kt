@@ -37,8 +37,8 @@ class SecurityConfig @Autowired constructor(
 
     override fun configure(http: HttpSecurity) {
         http.authorizeRequests()
-            .antMatchers("/test").permitAll()
-            .antMatchers("/api/**").authenticated()
+//            .antMatchers("/test").permitAll()
+//            .antMatchers("/api/**").authenticated()
             .anyRequest().permitAll()
             .and().exceptionHandling().authenticationEntryPoint(AuthenticationEntrypointConfig())
             .and().cors()

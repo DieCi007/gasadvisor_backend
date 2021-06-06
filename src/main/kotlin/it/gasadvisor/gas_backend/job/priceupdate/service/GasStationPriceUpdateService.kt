@@ -22,7 +22,7 @@ abstract class GasStationPriceUpdateService<T> constructor(
             null
         }
         while (currentLine != null) {
-            if (currentIndex < 3) {
+            if (currentIndex < 2) {
                 currentIndex++
                 currentLine = br.readLine()
                 continue
