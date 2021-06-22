@@ -34,7 +34,7 @@ class GasStationService @Autowired constructor(
         return repository.getStationData(stationId).orElseThrow { NotFoundException("Station with given id not found") }
     }
 
-    fun findAllPaginated(page: Int?, size: Int?, sortBy: String?, sortType: SortType?): PaginatedResponse<GasStationResponse> {
+    fun findAllPaginated(page: Int?, size: Int?, sortBy: String?, sortType: SortType?): PaginatedResponse<GasStationAnalyticsResponse> {
         var sort = if (sortBy == null) Sort.by("id") else Sort.by(sortBy)
         sort = if (sortType == null || sortType == SortType.ASC) sort.ascending() else sort.descending()
         val pageRequest =

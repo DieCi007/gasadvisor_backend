@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.station.contract
 
-interface GasStationResponse {
+interface GasStationAnalyticsResponse {
     fun getId(): Long?
     fun getOwner(): String?
     fun getFlag(): String?

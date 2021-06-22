@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.api.gas.station.contract.GasStationResponse
+import it.gasadvisor.gas_backend.api.gas.station.contract.GasStationAnalyticsResponse
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetAllStationsResponse
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationDataResponse
 import it.gasadvisor.gas_backend.model.GasStation
@@ -30,5 +30,5 @@ interface GasStationRepository : JpaRepository<GasStation, Long> {
 
     @Query("select gs.id as id, gs.owner as owner, gs.flag as flag, gs.type as type, gs.name as name, gs.address as address, " +
             "gs.municipality as municipality, gs.province as province, gs.latitude as latitude, gs.longitude as longitude from GasStation gs")
-    fun findAllPaginated(page: PageRequest): Page<GasStationResponse>
+    fun findAllPaginated(page: PageRequest): Page<GasStationAnalyticsResponse>
 }
