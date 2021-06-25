@@ -27,7 +27,7 @@ class GasStationService @Autowired constructor(
     }
 
     fun findLatestPrices(stationId: Long): List<GetStationPriceResponse> {
-        return priceRepository.findLatestPriceByStationId(stationId).orElse(emptyList())
+        return priceRepository.findLatestPriceByStationId(stationId)
     }
 
     fun getStationData(stationId: Long): GetStationDataResponse {

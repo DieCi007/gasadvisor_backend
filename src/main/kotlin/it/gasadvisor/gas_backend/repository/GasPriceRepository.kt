@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId> {
@@ -16,5 +15,5 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId> {
                 "from GasPrice p where p.id.gasStation.id = :id and " +
                 "p.id.readDate = (select max(g.id.readDate) from GasPrice g where g.id.gasStation.id = :id)"
     )
-    fun findLatestPriceByStationId(@Param("id") id: Long): Optional<List<GetStationPriceResponse>>
+    fun findLatestPriceByStationId(@Param("id") id: Long): List<GetStationPriceResponse>
 }
