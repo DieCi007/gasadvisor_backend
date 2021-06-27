@@ -15,7 +15,7 @@ import java.net.URL
 class PriceUpdateProcessor @Autowired constructor(
     private val priceUpdateService: PriceUpdateService,
     @Value("\${url.price}") private var endpoint: String
-) : GasStationPriceUpdateProcessor {
+) : GasUpdateProcessor {
 
     companion object : Log()
 

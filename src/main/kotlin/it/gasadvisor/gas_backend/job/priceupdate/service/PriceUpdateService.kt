@@ -16,7 +16,7 @@ import java.util.*
 class PriceUpdateService @Autowired constructor(
     private val service: GasPriceService,
     @Value("\${csv.delimiter}") val delimiter: String
-) : GasStationPriceUpdateService<GasPrice>(delimiter, 5) {
+) : GasUpdateService<GasPrice>(delimiter, 5) {
     companion object : Log()
 
     val dateFormatter: SimpleDateFormat = SimpleDateFormat(TimeUtils.PRICE_CSV_DATE_FORMAT, Locale.ITALY)

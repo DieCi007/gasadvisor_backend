@@ -15,7 +15,7 @@ import java.net.URL
 class GasStationUpdateProcessor @Autowired constructor(
     private val gasStationService: GasStationUpdateService,
     @Value("\${url.gasstation}") private var endpoint: String
-) : GasStationPriceUpdateProcessor {
+) : GasUpdateProcessor {
 
     companion object : Log()
 

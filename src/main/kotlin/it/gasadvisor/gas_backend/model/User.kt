@@ -8,7 +8,10 @@ import javax.validation.constraints.Size
 @Table(name = "user")
 class User(
     @Id
-    @Column(length = 20)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long?,
+
+    @Column(length = 20, nullable = false, unique = true)
     var username: String,
 
     @NotBlank

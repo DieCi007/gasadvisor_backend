@@ -76,8 +76,8 @@ class GasPriceRepositoryTest @Autowired constructor(
         priceRepository.save(moreRecentPriceOne)
         priceRepository.save(moreRecentPriceTwo)
         val res = priceRepository.findLatestPriceByStationId(station.id)
-        assertTrue(res.isPresent)
-        assertTrue(res.get().stream().allMatch { p -> p.price == 5.87 })
+        assertTrue(res.isNotEmpty())
+        assertTrue(res.stream().allMatch { p -> p.price == 5.87 })
     }
 
     @AfterAll

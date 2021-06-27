@@ -4,7 +4,7 @@ import it.gasadvisor.gas_backend.util.Log
 import java.io.BufferedReader
 import java.util.*
 
-abstract class GasStationPriceUpdateService<T> constructor(
+abstract class GasUpdateService<T> constructor(
     private val delimiter: String,
     private val maxColumnsPerRow: Int
 ) {

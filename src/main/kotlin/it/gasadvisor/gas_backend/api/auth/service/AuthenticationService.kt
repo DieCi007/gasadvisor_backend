@@ -22,25 +22,25 @@ class AuthenticationService @Autowired constructor(
             .orElseThrow { throw UserNotFoundException("User $username not found") }
     }
 
-    @PostConstruct
-    fun firstUser() {
-        privilegeRepository.save(Privilege(name = PrivilegeName.READ_ALL, description = "read all application data"))
-        privilegeRepository.save(Privilege(name = PrivilegeName.WRITE_ALL, description = "write all application data"))
-        roleRepository.save(
-            Role(
-                name = RoleName.ADMIN, privileges = setOf(
-                    Privilege(PrivilegeName.WRITE_ALL, null), Privilege(PrivilegeName.READ_ALL, null)
-                )
-            )
-        )
-        roleRepository.save(Role(name = RoleName.END_USER, emptySet()))
-        roleRepository.save(Role(name = RoleName.GUEST, emptySet()))
-        repository.save(
-            User(
-                username = "admin",
-                password = BCryptPasswordEncoder(10).encode("admin"),
-                role = Role(RoleName.ADMIN, emptySet())
-            )
-        )
-    }
+//    @PostConstruct
+//    fun firstUser() {
+//        privilegeRepository.save(Privilege(name = PrivilegeName.READ_ALL, description = "read all application data"))
+//        privilegeRepository.save(Privilege(name = PrivilegeName.WRITE_ALL, description = "write all application data"))
+//        roleRepository.save(
+//            Role(
+//                name = RoleName.ADMIN, privileges = setOf(
+//                    Privilege(PrivilegeName.WRITE_ALL, null), Privilege(PrivilegeName.READ_ALL, null)
+//                )
+//            )
+//        )
+//        roleRepository.save(Role(name = RoleName.END_USER, emptySet()))
+//        roleRepository.save(Role(name = RoleName.GUEST, emptySet()))
+//        repository.save(
+//            User(
+//                username = "admin",
+//                password = BCryptPasswordEncoder(10).encode("admin"),
+//                role = Role(RoleName.ADMIN, emptySet())
+//            )
+//        )
+//    }
 }

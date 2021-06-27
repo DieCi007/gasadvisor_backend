@@ -12,7 +12,7 @@ import java.util.*
 class GasStationUpdateService @Autowired constructor(
     private val service: GasStationService,
     @Value("\${csv.delimiter}") val delimiter: String
-) : GasStationPriceUpdateService<GasStation>(delimiter, 10) {
+) : GasUpdateService<GasStation>(delimiter, 10) {
     companion object : Log()
 
     override fun entityFromFields(fields: List<String>): Optional<GasStation> {

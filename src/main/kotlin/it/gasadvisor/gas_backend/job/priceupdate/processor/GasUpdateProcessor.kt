@@ -1,5 +1,5 @@
 package it.gasadvisor.gas_backend.job.priceupdate.processor
 
-sealed interface GasStationPriceUpdateProcessor {
+sealed interface GasUpdateProcessor {
     fun update()
 }

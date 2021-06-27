@@ -2,6 +2,7 @@ package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.model.*
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,13 +21,19 @@ class UserRepositoryTest @Autowired constructor(
 ) {
     private val privilege = Privilege(name = PrivilegeName.WRITE_ALL, description = "description")
     private val role = Role(name = RoleName.GUEST, privileges = setOf(privilege))
-    private val user = User( "user", "pass", role)
+    private val user = User( null,"user", "pass", role)
 
     @BeforeEach
     fun addDB() {
         privilegeRepo.save(privilege)
         roleRepo.save(role)
         userRepo.save(user)
+    }
+
+    @AfterEach
+    fun removeUser() {
+        userRepo.deleteAll()
+        userRepo.flush()
     }
 
     @Test

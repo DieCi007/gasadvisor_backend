@@ -39,8 +39,6 @@ class SecurityConfig @Autowired constructor(
         val authenticationFilter = AuthenticationFilter(getAuthManager(), mapper, jwtHelper)
         authenticationFilter.setFilterProcessesUrl("/api/v1/login")
         http.authorizeRequests()
-//            .antMatchers("/test").permitAll()
-//            .antMatchers("/api/**").authenticated()
             .anyRequest().permitAll()
             .and().exceptionHandling().authenticationEntryPoint(AuthenticationEntrypointConfig())
             .and().cors()
