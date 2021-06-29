@@ -13,5 +13,5 @@ class Province(
     var name: String,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "province")
-    var municipalities: Set<Municipality> = emptySet()
+    var municipalities: Set<Municipality>? = emptySet()
 )

@@ -2,6 +2,7 @@ package it.gasadvisor.gas_backend.job.priceupdate.scheduler
 
 import it.gasadvisor.gas_backend.job.priceupdate.processor.GasStationUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.PriceUpdateProcessor
+import it.gasadvisor.gas_backend.job.priceupdate.processor.ProvinceUpdateProcessor
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -17,6 +18,9 @@ internal class JobUpdateGasStationPriceTest {
     @Mock
     lateinit var priceUpdateProcessor: PriceUpdateProcessor
 
+    @Mock
+    lateinit var provinceUpdateProcessor: ProvinceUpdateProcessor
+
     @InjectMocks
     lateinit var jobUpdateGasStationPriceTest: JobUpdateGasStationPrice
 
@@ -25,6 +29,7 @@ internal class JobUpdateGasStationPriceTest {
         jobUpdateGasStationPriceTest.init()
         verify(stationPriceUpdateProcessor).update()
         verify(priceUpdateProcessor).update()
+        verify(provinceUpdateProcessor).update()
     }
 
 }

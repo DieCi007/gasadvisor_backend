@@ -46,7 +46,7 @@ abstract class GasUpdateService<T> constructor(
             totalSaved++
         }
         log.info("Saved $totalSaved rows. Skipped $totalSkipped")
-        log.info("Operation completed in ${(System.currentTimeMillis() - timeInit)/1000} seconds")
+        log.info("Operation completed in ${(System.currentTimeMillis() - timeInit) / 1000} seconds")
     }
 
     private fun handleNewLine(line: String): Optional<T> {
