@@ -3,7 +3,6 @@ package it.gasadvisor.gas_backend.repository
 import it.gasadvisor.gas_backend.model.GasStation
 import it.gasadvisor.gas_backend.model.Municipality
 import it.gasadvisor.gas_backend.model.Province
-import org.junit.Before
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -82,14 +81,23 @@ class GasStationRepositoryTest @Autowired constructor(
             2, "diego", "", "", "",
             "", "PR", "LE", 1.1, 1.1,
         )
+
+        val stationPR2 = GasStation(
+            4, "diego", "", "", "",
+            "", "PR", "LE", 1.1, 1.1,
+        )
+        val stationPR3 = GasStation(
+            5, "diego", "", "", "",
+            "", "PR", "MI", 1.1, 1.1,
+        )
         province = provinceRepository.save(province)
         val municipality = Municipality(null, "CO", province)
         municipalityRepository.save(municipality)
-        repository.saveAll(listOf(stationOne, stationCO, stationPR))
+        repository.saveAll(listOf(stationOne, stationCO, stationPR, stationPR2, stationPR3))
         val res = repository.findNotSavedMunicipalities()
-        assertTrue(res.size == 2)
+        assertTrue(res.size == 3 )
         assertTrue(res.stream().map { mp -> mp.getMunicipality() }
-            .allMatch{ m -> listOf("CI", "PR").contains(m)})
+            .allMatch { m -> listOf("CI", "PR").contains(m) })
     }
 
     @BeforeEach

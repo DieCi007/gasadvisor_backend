@@ -28,7 +28,7 @@ internal class ProvinceUpdateServiceTest {
     lateinit var municipalityRepository: MunicipalityRepository
 
     @InjectMocks
-    lateinit var service: ProvinceUpdateService;
+    lateinit var service: ProvinceUpdateService
 
     @Test
     fun `update should work`() {
@@ -49,8 +49,8 @@ internal class ProvinceUpdateServiceTest {
             }))
         whenever(provinceRepository.findByName("MI"))
             .thenReturn(Optional.of(province))
-        val provinceCaptor = ArgumentCaptor.forClass(Province::class.java);
-        val municipalityCaptor = ArgumentCaptor.forClass(Municipality::class.java);
+        val provinceCaptor = ArgumentCaptor.forClass(Province::class.java)
+        val municipalityCaptor = ArgumentCaptor.forClass(Municipality::class.java)
         service.update()
         verify(provinceRepository, times(2)).save(provinceCaptor.capture())
         assertTrue(provinceCaptor.firstValue.name == "MI")
