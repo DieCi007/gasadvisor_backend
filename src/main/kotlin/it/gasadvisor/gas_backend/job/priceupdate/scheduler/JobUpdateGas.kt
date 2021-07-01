@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.job.priceupdate.scheduler
 
+import it.gasadvisor.gas_backend.job.priceupdate.processor.ExplicitFuelUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.GasStationUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.PriceUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.ProvinceUpdateProcessor
@@ -10,10 +11,11 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-class JobUpdateGasStationPrice @Autowired constructor(
+class JobUpdateGas @Autowired constructor(
     @Qualifier("gasStationUpdateProcessor") private val stationPriceUpdateProcessor: GasStationUpdateProcessor,
     @Qualifier("priceUpdateProcessor") private val priceUpdateProcessor: PriceUpdateProcessor,
-    @Qualifier("provinceUpdateProcessor") private val provinceUpdateProcessor: ProvinceUpdateProcessor
+    @Qualifier("provinceUpdateProcessor") private val provinceUpdateProcessor: ProvinceUpdateProcessor,
+    @Qualifier("explicitFuelUpdateProcessor") private val explicitFuelUpdateProcessor: ExplicitFuelUpdateProcessor
 ) {
     companion object : Log()
 
@@ -25,6 +27,8 @@ class JobUpdateGasStationPrice @Autowired constructor(
         priceUpdateProcessor.update()
         log.info("Starting province update")
         provinceUpdateProcessor.update()
+        log.info("Starting fuel type update")
+        explicitFuelUpdateProcessor.update()
     }
 
 }

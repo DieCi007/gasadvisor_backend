@@ -1,11 +1,10 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.GasPrice
-import it.gasadvisor.gas_backend.model.GasPriceId
-import it.gasadvisor.gas_backend.model.GasStation
+import it.gasadvisor.gas_backend.model.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +20,8 @@ import java.time.temporal.ChronoUnit
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GasPriceRepositoryTest @Autowired constructor(
     val priceRepository: GasPriceRepository,
-    val stationRepository: GasStationRepository
+    val stationRepository: GasStationRepository,
+    val explicitFuelRepository: ExplicitFuelRepository
 ) {
     private val station = GasStation(
         1, "diego", "", "", "", "",
@@ -41,6 +41,19 @@ class GasPriceRepositoryTest @Autowired constructor(
             "desc"
         ), 2.87
     )
+
+    @Test
+    fun `should get not saved fuel types`() {
+        explicitFuelRepository.save(ExplicitFuelType(null, "gasolio", CommonFuelType.GASOLIO))
+        stationRepository.save(station)
+        val metano = GasPrice(GasPriceId(station, true, timeRead, "metano"), 1.00)
+        val gasolio = GasPrice(GasPriceId(station, true, timeRead, "gasolio"), 1.01)
+        val benzina = GasPrice(GasPriceId(station, true, timeRead, "benzina"), 1.03)
+        val benzinaDouble = GasPrice(GasPriceId(station, false, timeRead, "benzina"), 1.04)
+        priceRepository.saveAll(listOf(metano, gasolio, benzina, benzinaDouble))
+        val result = priceRepository.findNotSavedFuelTypes()
+        assertEquals(result.size, 2)
+    }
 
     @Test
     fun `save should update station`() {
@@ -80,9 +93,10 @@ class GasPriceRepositoryTest @Autowired constructor(
         assertTrue(res.stream().allMatch { p -> p.price == 5.87 })
     }
 
-    @AfterAll
+    @BeforeEach
     fun clear() {
-        priceRepository.deleteAll()
-        stationRepository.deleteAll()
+        explicitFuelRepository.deleteAllInBatch()
+        priceRepository.deleteAllInBatch()
+        stationRepository.deleteAllInBatch()
     }
 }

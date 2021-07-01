@@ -16,4 +16,10 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId> {
                 "p.id.readDate = (select max(g.id.readDate) from GasPrice g where g.id.gasStation.id = :id)"
     )
     fun findLatestPriceByStationId(@Param("id") id: Long): List<GetStationPriceResponse>
+
+    @Query(
+        "select distinct gp.id.description from GasPrice gp where gp.id.description " +
+                "not in (select eft.name from ExplicitFuelType eft)"
+    )
+    fun findNotSavedFuelTypes(): List<String>
 }

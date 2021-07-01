@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.job.priceupdate.scheduler
 
+import it.gasadvisor.gas_backend.job.priceupdate.processor.ExplicitFuelUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.GasStationUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.PriceUpdateProcessor
 import it.gasadvisor.gas_backend.job.priceupdate.processor.ProvinceUpdateProcessor
@@ -11,7 +12,7 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class JobUpdateGasStationPriceTest {
+internal class JobUpdateGasTest {
     @Mock
     lateinit var stationPriceUpdateProcessor: GasStationUpdateProcessor
 
@@ -21,15 +22,19 @@ internal class JobUpdateGasStationPriceTest {
     @Mock
     lateinit var provinceUpdateProcessor: ProvinceUpdateProcessor
 
+    @Mock
+    lateinit var explicitFuelUpdateProcessor: ExplicitFuelUpdateProcessor
+
     @InjectMocks
-    lateinit var jobUpdateGasStationPriceTest: JobUpdateGasStationPrice
+    lateinit var jobUpdateGasTest: JobUpdateGas
 
     @Test
     fun `should interact with both processors`() {
-        jobUpdateGasStationPriceTest.init()
+        jobUpdateGasTest.init()
         verify(stationPriceUpdateProcessor).update()
         verify(priceUpdateProcessor).update()
         verify(provinceUpdateProcessor).update()
+        verify(explicitFuelUpdateProcessor).update()
     }
 
 }
