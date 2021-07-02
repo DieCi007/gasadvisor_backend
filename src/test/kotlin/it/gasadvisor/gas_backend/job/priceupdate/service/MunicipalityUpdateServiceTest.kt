@@ -6,6 +6,7 @@ import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.MunicipalityRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityProvince
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,26 +18,39 @@ import org.mockito.kotlin.*
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-internal class ProvinceUpdateServiceTest {
+internal class MunicipalityUpdateServiceTest {
     @Mock
-    lateinit var stationRepo: GasStationRepository
+    lateinit var stationRepository: GasStationRepository
+
+    @Mock
+    lateinit var municipalityRepository: MunicipalityRepository
 
     @Mock
     lateinit var provinceRepository: ProvinceRepository
 
     @InjectMocks
-    lateinit var service: ProvinceUpdateService
+    lateinit var service: MunicipalityUpdateService
 
     @Test
     fun `update should work`() {
         val province = Province(null, "MI", emptySet())
-        val province2 = Province(null, "TO", emptySet())
-        whenever(stationRepo.findNotSavedProvinces())
-            .thenReturn(listOf(province.name, province2.name))
-        val provinceCaptor = ArgumentCaptor.forClass(Province::class.java)
+        whenever(stationRepository.findNotSavedMunicipalities())
+            .thenReturn(listOf(object : IMunicipalityProvince {
+                override fun getMunicipality(): String {
+                    return "CO"
+                }
+
+                override fun getProvince(): String {
+                    return "MI"
+                }
+            }))
+        whenever(provinceRepository.findByName("MI"))
+            .thenReturn(Optional.of(province))
+        val municipalityCaptor = ArgumentCaptor.forClass(Municipality::class.java)
         service.update()
-        verify(provinceRepository, times(2)).save(provinceCaptor.capture())
-        assertTrue(provinceCaptor.firstValue.name == "MI")
-        assertTrue(provinceCaptor.secondValue.name == "TO")
+        verify(municipalityRepository).save(municipalityCaptor.capture())
+        assertTrue(municipalityCaptor.value.name == "CO")
     }
+
+
 }

@@ -7,12 +7,14 @@ import javax.persistence.*
 data class ExplicitFuelType(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id: Long?,
+    var id: Long?,
 
     @Column(nullable = false, unique = true)
-    private var name: String,
+    var name: String,
 
     @Enumerated(EnumType.STRING)
-    private var commonType: CommonFuelType
-
-)
+    var commonType: CommonFuelType?
+) {
+    constructor(name: String) : this(null, name, null) {
+    }
+}
