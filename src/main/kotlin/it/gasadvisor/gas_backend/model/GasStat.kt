@@ -13,12 +13,22 @@ data class GasStat(
     @Column(nullable = false)
     private var date: Instant,
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     private var prices: List<PriceStat>,
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private var mostStationsProvince: Province,
+    @JoinColumn(nullable = true)
+    private var mostStationsProvince: Province?,
 
     @ManyToOne(fetch = FetchType.EAGER)
-    private var mostStationsMunicipality: Municipality
+    @JoinColumn(nullable = true)
+    private var mostStationsMunicipality: Municipality?,
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
+    private var leastStationsProvince: Province?,
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
+    private var leastStationsMunicipality: Municipality?
 )

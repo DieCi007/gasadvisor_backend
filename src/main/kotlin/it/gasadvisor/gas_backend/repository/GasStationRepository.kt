@@ -4,6 +4,7 @@ import it.gasadvisor.gas_backend.api.gas.station.contract.GasStationAnalyticsRes
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetAllStationsResponse
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationDataResponse
 import it.gasadvisor.gas_backend.model.GasStation
+import it.gasadvisor.gas_backend.model.Province
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityProvince
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

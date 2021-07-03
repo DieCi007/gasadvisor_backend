@@ -29,4 +29,14 @@ class GasStation(
         id, "", "", "", "", "",
         "", "", 0.0, 0.0
     )
+
+    constructor(id: Long, province: String) : this(
+        id, "", "", "", "", "",
+        "", province, 0.0, 0.0
+    )
+
+    constructor(id: Long, province: String, municipality: String) : this(
+        id, "", "", "", "", "",
+        municipality, province, 0.0, 0.0
+    )
 }

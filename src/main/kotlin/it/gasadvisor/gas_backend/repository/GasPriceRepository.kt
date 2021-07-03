@@ -1,8 +1,10 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationPriceResponse
+import it.gasadvisor.gas_backend.model.CommonFuelType
 import it.gasadvisor.gas_backend.model.GasPrice
 import it.gasadvisor.gas_backend.model.GasPriceId
+import it.gasadvisor.gas_backend.repository.contract.IPriceStat
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -22,4 +24,17 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId> {
                 "not in (select eft.name from ExplicitFuelType eft)"
     )
     fun findNotSavedFuelTypes(): List<String>
+
+    @Query(
+        "select avg(gp.price) as avg, min(gp.price) as min, max(gp.price) as max from GasPrice gp where gp.id.description in " +
+                "(select ft.name from ExplicitFuelType ft where ft.commonType = :fuelType) and gp.id.readDate = " +
+                "(select max(gp1.id.readDate) from GasPrice gp1 where gp1.id.gasStation.id = gp.id.gasStation.id) " +
+                "and gp.id.gasStation.province = coalesce(:province, gp.id.gasStation.province) " +
+                "and gp.id.gasStation.municipality = coalesce(:municipality, gp.id.gasStation.municipality)"
+    )
+    fun findPriceStat(
+        @Param("fuelType") fuelType: CommonFuelType,
+        @Param("province") province: String?,
+        @Param("municipality") municipality: String?
+    ): IPriceStat
 }

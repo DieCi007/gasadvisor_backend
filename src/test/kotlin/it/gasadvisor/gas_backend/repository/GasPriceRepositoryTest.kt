@@ -1,12 +1,9 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.model.*
-import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
@@ -25,7 +22,7 @@ class GasPriceRepositoryTest @Autowired constructor(
 ) {
     private val station = GasStation(
         1, "diego", "", "", "", "",
-        "", "", 1.1, 1.1,
+        "MI", "MI", 1.1, 1.1,
     )
     private val timeRead: Instant = Instant.now()
     private val priceOne = GasPrice(
@@ -41,6 +38,86 @@ class GasPriceRepositoryTest @Autowired constructor(
             "desc"
         ), 2.87
     )
+
+    @Test
+    fun `find price should work with municipality`() {
+        stationRepository.save(station)
+        val otherMunicipalityStation = GasStation(
+            2, "diego", "", "", "", "",
+            "MI", "TO", 1.1, 1.1,
+        )
+        stationRepository.save(otherMunicipalityStation)
+        val priceTO = GasPrice(
+            GasPriceId(
+                GasStation(2), true, timeRead,
+                "desc"
+            ), 3.00
+        )
+        val priceMI = GasPrice(
+            GasPriceId(
+                GasStation(1),
+                false, timeRead, "desc"
+            ), 4.00
+        )
+        priceRepository.saveAll(listOf(priceTO, priceMI))
+        explicitFuelRepository.save(ExplicitFuelType(null, "desc", CommonFuelType.GASOLIO))
+        val avgMun = priceRepository.findPriceStat(CommonFuelType.GASOLIO, null, "MI")
+        assertEquals(3.50, avgMun.getAvg())
+        val avgMunProv = priceRepository.findPriceStat(CommonFuelType.GASOLIO, "MI", "MI")
+        assertEquals(4.00, avgMunProv.getAvg())
+    }
+
+    @Test
+    fun `find price should work with province`() {
+        stationRepository.save(station)
+        val otherProvinceStation = GasStation(
+            2, "diego", "", "", "", "",
+            "", "TO", 1.1, 1.1,
+        )
+        stationRepository.save(otherProvinceStation)
+        val priceTO = GasPrice(
+            GasPriceId(
+                GasStation(2), true, timeRead,
+                "desc"
+            ), 3.00
+        )
+        val priceMI = GasPrice(
+            GasPriceId(
+                GasStation(1),
+                false, timeRead, "desc"
+            ), 2.87
+        )
+        priceRepository.saveAll(listOf(priceOne, priceTO, priceMI))
+        explicitFuelRepository.save(ExplicitFuelType(null, "desc", CommonFuelType.GASOLIO))
+        val result = priceRepository.findPriceStat(CommonFuelType.GASOLIO, "MI", null)
+        assertEquals(2.37, result.getAvg())
+        assertEquals(1.87, result.getMin())
+        assertEquals(2.87, result.getMax())
+    }
+
+    @Test
+    fun `find price stat should find correct prices`() {
+        stationRepository.save(station)
+        explicitFuelRepository.save(ExplicitFuelType(null, "desc", CommonFuelType.GASOLIO))
+        val newerDate = timeRead.plus(1, ChronoUnit.DAYS)
+        val priceNewerOne = GasPrice(
+            GasPriceId(
+                GasStation(1), true, newerDate,
+                "desc"
+            ), 2.00
+        )
+        val priceNewerTwo = GasPrice(
+            GasPriceId(
+                GasStation(1), false, newerDate,
+                "desc"
+            ), 4.00
+        )
+        priceRepository.saveAll(listOf(priceOne, priceNewerOne, priceNewerTwo))
+        val avgPrice = priceRepository.findPriceStat(CommonFuelType.GASOLIO, null, null)
+        assertEquals(3.00, avgPrice.getAvg())
+        assertEquals(2.00, avgPrice.getMin())
+        assertEquals(4.00, avgPrice.getMax())
+    }
 
     @Test
     fun `should get not saved fuel types`() {
