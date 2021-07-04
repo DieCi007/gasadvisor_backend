@@ -8,27 +8,27 @@ import javax.persistence.*
 data class GasStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id: Long?,
+    var id: Long?,
 
     @Column(nullable = false)
-    private var date: Instant,
+    var date: Instant,
 
     @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-    private var prices: List<PriceStat>,
+    var prices: List<PriceStat>,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
-    private var mostStationsProvince: Province?,
+    var mostStationsProvince: Province?,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
-    private var mostStationsMunicipality: Municipality?,
+    var mostStationsMunicipality: Municipality?,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
-    private var leastStationsProvince: Province?,
+    var leastStationsProvince: Province?,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
-    private var leastStationsMunicipality: Municipality?
+    var leastStationsMunicipality: Municipality?
 )

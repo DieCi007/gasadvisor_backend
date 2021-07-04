@@ -22,12 +22,12 @@ data class PriceStat(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
-    private var gasStat: GasStat
+    private var gasStat: GasStat?
 
 )
 
 enum class PriceStatType {
     AVG,
-    LOW,
-    HIGH
+    MIN,
+    MAX
 }

@@ -21,7 +21,7 @@ interface MunicipalityRepository : JpaRepository<Municipality, Long> {
     ): Optional<Municipality>
 
     @Query(
-        "select gs.municipality as municipality, count(*) as total from gas_station gs " +
+        "select gs.municipality as municipality, gs.province as province, count(*) as total from gas_station gs " +
                 "where gs.municipality in (select gs1.municipality from gas_station gs1 where " +
                 "gs1.province = gs.province) " +
                 "group by gs.municipality, gs.province order by total desc limit 1", nativeQuery = true
@@ -29,7 +29,7 @@ interface MunicipalityRepository : JpaRepository<Municipality, Long> {
     fun findOneWithMostStations(): IMunicipalityStationsTotal
 
     @Query(
-        "select gs.municipality as municipality, count(*) as total from gas_station gs " +
+        "select gs.municipality as municipality, gs.province as province, count(*) as total from gas_station gs " +
                 "where gs.municipality in (select gs1.municipality from gas_station gs1 where " +
                 "gs1.province = gs.province) " +
                 "group by gs.municipality, gs.province order by total asc limit 1", nativeQuery = true
