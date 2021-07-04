@@ -1,18 +1,18 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.model.GasStation
-import org.junit.jupiter.api.Assertions
+import it.gasadvisor.gas_backend.model.Municipality
+import it.gasadvisor.gas_backend.model.Province
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestPropertySource
 
 @JpaTest
 class MunicipalityRepositoryTest @Autowired constructor(
     val municipalityRepository: MunicipalityRepository,
-    val gasStationRepository: GasStationRepository
+    val gasStationRepository: GasStationRepository,
+    val provinceRepository: ProvinceRepository
 ) {
     val stations = listOf(
         GasStation(1, "MI", "CO"),
@@ -26,24 +26,37 @@ class MunicipalityRepositoryTest @Autowired constructor(
     )
 
     @Test
+    fun `should load province`() {
+        var province = Province(null, "province")
+        province = provinceRepository.save(province)
+        val municipality = Municipality(null, "muni", province)
+        municipalityRepository.save(municipality)
+        val res = municipalityRepository
+            .findByNameAndProvince("muni", "province").get()
+        assertEquals("province", res.province.name)
+    }
+
+
+    @Test
     fun `should find municipality with most stations`() {
         gasStationRepository.saveAll(stations)
         val result = municipalityRepository.findOneWithMostStations()
-        Assertions.assertEquals("CO", result.getMunicipality())
-        Assertions.assertEquals(3, result.getTotal())
+        assertEquals("CO", result.getMunicipality())
+        assertEquals(3, result.getTotal())
     }
 
     @Test
     fun `should find municipality with least stations`() {
         gasStationRepository.saveAll(stations)
         val result = municipalityRepository.findOneWithLeastStations()
-        Assertions.assertEquals("MI", result.getMunicipality())
-        Assertions.assertEquals(1, result.getTotal())
+        assertEquals("MI", result.getMunicipality())
+        assertEquals(1, result.getTotal())
     }
 
     @BeforeEach
     fun clear() {
         municipalityRepository.deleteAllInBatch()
         gasStationRepository.deleteAllInBatch()
+        provinceRepository.deleteAllInBatch()
     }
 }

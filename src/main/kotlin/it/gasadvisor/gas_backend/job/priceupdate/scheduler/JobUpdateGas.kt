@@ -13,7 +13,9 @@ class JobUpdateGas @Autowired constructor(
     @Qualifier("priceUpdateProcessor") private val priceUpdateProcessor: PriceUpdateProcessor,
     @Qualifier("provinceUpdateProcessor") private val provinceUpdateProcessor: ProvinceUpdateProcessor,
     @Qualifier("explicitFuelUpdateProcessor") private val explicitFuelUpdateProcessor: ExplicitFuelUpdateProcessor,
-    @Qualifier("gasStatUpdateProcessor") private val gasStatUpdateProcessor: GasStatUpdateProcessor
+    @Qualifier("gasStatUpdateProcessor") private val gasStatUpdateProcessor: GasStatUpdateProcessor,
+    @Qualifier("provinceStatUpdateProcessor") private val provinceStatUpdateProcessor: ProvinceStatUpdateProcessor,
+    @Qualifier("municipalityStatUpdateProcessor") private val municipalityStatUpdateProcessor: MunicipalityStatUpdateProcessor
 ) {
     companion object : Log()
 
@@ -29,6 +31,10 @@ class JobUpdateGas @Autowired constructor(
         explicitFuelUpdateProcessor.update()
         log.info("Starting gas stat update")
         gasStatUpdateProcessor.update()
+        log.info("Starting province stat update")
+        provinceStatUpdateProcessor.update()
+        log.info("Starting municipality stat update")
+        municipalityStatUpdateProcessor.update()
     }
 
 }

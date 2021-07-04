@@ -7,7 +7,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.beans.factory.annotation.Qualifier
 
 @ExtendWith(MockitoExtension::class)
 internal class JobUpdateGasTest {
@@ -26,17 +25,25 @@ internal class JobUpdateGasTest {
     @Mock
     lateinit var gasStatUpdateProcessor: GasStatUpdateProcessor
 
+    @Mock
+    lateinit var provinceStatUpdateProcessor: ProvinceStatUpdateProcessor
+
+    @Mock
+    lateinit var municipalityStatUpdateProcessor: MunicipalityStatUpdateProcessor
+
     @InjectMocks
     lateinit var jobUpdateGasTest: JobUpdateGas
 
     @Test
-    fun `should interact with both processors`() {
+    fun `should interact with all processors`() {
         jobUpdateGasTest.init()
         verify(stationPriceUpdateProcessor).update()
         verify(priceUpdateProcessor).update()
         verify(provinceUpdateProcessor).update()
         verify(explicitFuelUpdateProcessor).update()
         verify(gasStatUpdateProcessor).update()
+        verify(provinceStatUpdateProcessor).update()
+        verify(municipalityStatUpdateProcessor).update()
     }
 
 }

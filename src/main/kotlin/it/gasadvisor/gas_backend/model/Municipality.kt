@@ -18,5 +18,8 @@ class Municipality(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "province_id")
-    var province: Province
+    var province: Province,
+
+    @OneToMany
+    var stats: List<MunicipalityStat>? = emptyList()
 )

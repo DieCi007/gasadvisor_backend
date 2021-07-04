@@ -1,5 +1,8 @@
 package it.gasadvisor.gas_backend.job.priceupdate.service
 
+import it.gasadvisor.gas_backend.fixtures.IMunicipalityStationsTotalFixture.Companion.getIMunicipalityStationsTotal
+import it.gasadvisor.gas_backend.fixtures.IPriceStatFixture.Companion.getIPriceStat
+import it.gasadvisor.gas_backend.fixtures.IProvinceStationsTotalFixture.Companion.getIProvinceStationsTotal
 import it.gasadvisor.gas_backend.model.GasStat
 import it.gasadvisor.gas_backend.model.Municipality
 import it.gasadvisor.gas_backend.model.Province
@@ -7,9 +10,6 @@ import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.GasStatRepository
 import it.gasadvisor.gas_backend.repository.MunicipalityRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository
-import it.gasadvisor.gas_backend.repository.contract.IMunicipalityStationsTotal
-import it.gasadvisor.gas_backend.repository.contract.IPriceStat
-import it.gasadvisor.gas_backend.repository.contract.IProvinceStationsTotal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -74,51 +74,7 @@ internal class GasStatUpdateServiceTest {
 
     //    private fun <T> any(type: Class<T>): T = Mockito.any(type)
     //inline fun <reified T> anyNonNull(): T = Mockito.any<T>(T::class.java)
-    private fun <T> any(): T = Mockito.any()
+    fun <T> any(): T = Mockito.any()
 
-    private fun getIMunicipalityStationsTotal(municipality: String, province: String): IMunicipalityStationsTotal {
-        return object : IMunicipalityStationsTotal {
-            override fun getMunicipality(): String {
-                return municipality
-            }
 
-            override fun getProvince(): String {
-                return province
-            }
-
-            override fun getTotal(): Long {
-                return 1
-            }
-
-        }
-    }
-
-    private fun getIProvinceStationsTotal(province: String): IProvinceStationsTotal {
-        return object : IProvinceStationsTotal {
-            override fun getProvince(): String {
-                return province
-            }
-
-            override fun getTotal(): Long {
-                return 1
-            }
-
-        }
-    }
-
-    private fun getIPriceStat(): IPriceStat {
-        return object : IPriceStat {
-            override fun getAvg(): Double {
-                return 2.50
-            }
-
-            override fun getMin(): Double {
-                return 2.00
-            }
-
-            override fun getMax(): Double {
-                return 3.00
-            }
-        }
-    }
 }
