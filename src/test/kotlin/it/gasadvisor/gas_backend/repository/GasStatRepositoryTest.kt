@@ -16,7 +16,7 @@ class GasStatRepositoryTest @Autowired constructor(
 ) {
     @Test
     fun `should also save all price stats`() {
-        val priceStat = PriceStat(null, CommonFuelType.GASOLIO, 1.00, PriceStatType.AVG, null)
+        val priceStat = PriceStat(CommonFuelType.GASOLIO, 1.00, PriceStatType.AVG)
         val gasStat = GasStat(
             null, Instant.now(), listOf(priceStat),
             null, null, null, null

@@ -13,7 +13,10 @@ data class GasStat(
     @Column(nullable = false)
     var date: Instant,
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(
+        fetch = FetchType.EAGER, cascade = [CascadeType.ALL],
+        mappedBy = "gasStat"
+    )
     var prices: List<PriceStat>,
 
     @ManyToOne(fetch = FetchType.EAGER)

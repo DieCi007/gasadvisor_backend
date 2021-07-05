@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "price_stat")
-data class PriceStat(
+class PriceStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long?,
@@ -13,21 +13,24 @@ data class PriceStat(
     @Column(nullable = false)
     private var fuelType: CommonFuelType,
 
-    @Column(nullable = false)
-    private var price: Double,
+    @Column(nullable = true)
+    private var price: Double?,
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private var type: PriceStatType,
+    @Column(nullable = false)
+    private var priceStatType: PriceStatType,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = true)
-    private var gasStat: GasStat?
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private var gasStat: GasStat?,
 
-)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private var provinceStat: ProvinceStat?,
 
-enum class PriceStatType {
-    AVG,
-    MIN,
-    MAX
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private var municipalityStat: MunicipalityStat?
+) {
+    constructor(type: CommonFuelType, price: Double?, priceStatType: PriceStatType) :
+            this(null, type, price, priceStatType, null, null, null)
 }
+
+

@@ -31,9 +31,9 @@ class GasStatUpdateService @Autowired constructor(
             .flatMap {
                 val iPriceStat = gasPriceRepository.findPriceStat(it, null, null)
                 listOf(
-                    PriceStat(null, it, iPriceStat.getAvg(), PriceStatType.AVG, null),
-                    PriceStat(null, it, iPriceStat.getMax(), PriceStatType.MAX, null),
-                    PriceStat(null, it, iPriceStat.getMin(), PriceStatType.MIN, null)
+                    PriceStat(it, iPriceStat.getAvg(), PriceStatType.AVG),
+                    PriceStat(it, iPriceStat.getMax(), PriceStatType.MAX),
+                    PriceStat(it, iPriceStat.getMin(), PriceStatType.MIN)
                 )
             }
         val provinceMostStationsName = provinceRepository.findOneWithMostStations().getProvince()

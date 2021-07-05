@@ -13,7 +13,10 @@ data class MunicipalityStat(
     @Column(nullable = false)
     var date: Instant,
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+    @OneToMany(
+        fetch = FetchType.EAGER, cascade = [CascadeType.ALL],
+        mappedBy = "municipalityStat"
+    )
     var prices: List<PriceStat>,
 
     @ManyToOne(fetch = FetchType.EAGER)

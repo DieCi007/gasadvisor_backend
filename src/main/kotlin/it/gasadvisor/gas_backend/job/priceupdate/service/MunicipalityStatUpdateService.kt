@@ -28,9 +28,9 @@ class MunicipalityStatUpdateService @Autowired constructor(
                 .flatMap {
                     val iPriceStat = priceRepository.findPriceStat(it, m.province.name, m.name)
                     listOf(
-                        PriceStat(null, it, iPriceStat.getAvg(), PriceStatType.AVG, null),
-                        PriceStat(null, it, iPriceStat.getMin(), PriceStatType.MIN, null),
-                        PriceStat(null, it, iPriceStat.getMax(), PriceStatType.MAX, null),
+                        PriceStat(it, iPriceStat.getAvg(), PriceStatType.AVG),
+                        PriceStat(it, iPriceStat.getMin(), PriceStatType.MIN),
+                        PriceStat(it, iPriceStat.getMax(), PriceStatType.MAX),
                     )
                 }
             MunicipalityStat(null, date, stats, m)
