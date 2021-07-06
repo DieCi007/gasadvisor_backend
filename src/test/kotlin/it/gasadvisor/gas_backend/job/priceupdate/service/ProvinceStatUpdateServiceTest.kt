@@ -4,6 +4,7 @@ import it.gasadvisor.gas_backend.fixtures.IPriceStatFixture.Companion.getIPriceS
 import it.gasadvisor.gas_backend.model.Province
 import it.gasadvisor.gas_backend.model.ProvinceStat
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
+import it.gasadvisor.gas_backend.repository.PriceStatRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository
 import it.gasadvisor.gas_backend.repository.ProvinceStatRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.time.Instant
@@ -26,6 +28,9 @@ internal class ProvinceStatUpdateServiceTest {
 
     @Mock
     lateinit var priceRepository: GasPriceRepository
+
+    @Mock
+    lateinit var priceStatRepository: PriceStatRepository
 
     @Mock
     lateinit var provinceRepository: ProvinceRepository
@@ -42,11 +47,12 @@ internal class ProvinceStatUpdateServiceTest {
         whenever(priceRepository.findPriceStat(any(), any(), any()))
             .thenReturn(getIPriceStat())
         val captor = ArgumentCaptor.forClass(ProvinceStat::class.java)
+        whenever(provinceStatRepository.save(any())).then { i -> i.getArgument<ProvinceStat>(0) }
         service.update()
         verify(provinceStatRepository).save(captor.capture())
         assertEquals(date, captor.value.date)
         assertEquals("LE", captor.value.province.name)
-        assertEquals(12, captor.value.prices.size)
+        verify(priceStatRepository, times(12)).save(any())
     }
 
     private fun <T> any(): T = Mockito.any()

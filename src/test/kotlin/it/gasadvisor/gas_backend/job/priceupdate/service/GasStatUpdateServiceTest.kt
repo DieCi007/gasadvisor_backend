@@ -66,6 +66,7 @@ internal class GasStatUpdateServiceTest {
             .thenReturn(Optional.of(municipality))
 
         val captor = ArgumentCaptor.forClass(GasStat::class.java)
+        whenever(gasStatRepository.save(any())).then { i -> i.getArgument<GasStat>(0) }
         service.update()
         verify(gasStatRepository).save(captor.capture())
         assertEquals(date, captor.value.date)

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentCaptor
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
 
@@ -28,10 +29,13 @@ internal class ExplicitFuelUpdateServiceTest {
         whenever(priceRepository.findNotSavedFuelTypes())
             .thenReturn(listOf("one", "two"))
         val captor = ArgumentCaptor.forClass(ExplicitFuelType::class.java)
+        whenever(fuelRepository.save(any())).then { i -> i.getArgument<ExplicitFuelType>(0) }
         service.update()
         verify(fuelRepository, times(2)).save(captor.capture())
         assertEquals(captor.firstValue.name, "one")
         assertEquals(captor.secondValue.name, "two")
     }
+
+    private fun <T> any(): T = Mockito.any()
 
 }
