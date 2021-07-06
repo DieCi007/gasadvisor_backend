@@ -17,8 +17,10 @@ data class ProvinceStat(
         fetch = FetchType.EAGER, cascade = [CascadeType.ALL],
         mappedBy = "provinceStat"
     )
-    var prices: List<PriceStat>,
+    var prices: List<PriceStat> = emptyList(),
 
     @ManyToOne(fetch = FetchType.EAGER)
     var province: Province
-)
+) {
+    constructor(date: Instant, province: Province) : this(null, date, emptyList(), province)
+}

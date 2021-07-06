@@ -28,8 +28,6 @@ internal class JobUpdateGasTest {
     @Mock
     lateinit var provinceStatUpdateProcessor: ProvinceStatUpdateProcessor
 
-    @Mock
-    lateinit var municipalityStatUpdateProcessor: MunicipalityStatUpdateProcessor
 
     @InjectMocks
     lateinit var jobUpdateGasTest: JobUpdateGas
@@ -43,7 +41,6 @@ internal class JobUpdateGasTest {
         verify(explicitFuelUpdateProcessor).update()
         verify(gasStatUpdateProcessor).update()
         verify(provinceStatUpdateProcessor).update()
-        verify(municipalityStatUpdateProcessor).update()
     }
 
 }

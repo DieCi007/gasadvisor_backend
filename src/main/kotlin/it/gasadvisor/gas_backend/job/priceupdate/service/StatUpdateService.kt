@@ -13,6 +13,6 @@ abstract class StatUpdateService<T> {
         return
     }
 
-    abstract fun save(feature: T)
+    abstract fun save(feature: T): T
     abstract fun buildFeatures(): List<T>
 }

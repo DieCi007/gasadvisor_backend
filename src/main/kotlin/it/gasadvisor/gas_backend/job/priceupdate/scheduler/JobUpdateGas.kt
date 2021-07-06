@@ -14,27 +14,24 @@ class JobUpdateGas @Autowired constructor(
     @Qualifier("provinceUpdateProcessor") private val provinceUpdateProcessor: ProvinceUpdateProcessor,
     @Qualifier("explicitFuelUpdateProcessor") private val explicitFuelUpdateProcessor: ExplicitFuelUpdateProcessor,
     @Qualifier("gasStatUpdateProcessor") private val gasStatUpdateProcessor: GasStatUpdateProcessor,
-    @Qualifier("provinceStatUpdateProcessor") private val provinceStatUpdateProcessor: ProvinceStatUpdateProcessor,
-    @Qualifier("municipalityStatUpdateProcessor") private val municipalityStatUpdateProcessor: MunicipalityStatUpdateProcessor
+    @Qualifier("provinceStatUpdateProcessor") private val provinceStatUpdateProcessor: ProvinceStatUpdateProcessor
 ) {
     companion object : Log()
 
     @Scheduled(cron = "\${job.update.gas.cron}", zone = "Europe/Rome")
     fun init() {
-//        log.info("Starting station update")
-//        stationPriceUpdateProcessor.update()
-//        log.info("Starting price update")
-//        priceUpdateProcessor.update()
-//        log.info("Starting province update")
-//        provinceUpdateProcessor.update()
-//        log.info("Starting fuel type update")
-//        explicitFuelUpdateProcessor.update()
+        log.info("Starting station update")
+        stationPriceUpdateProcessor.update()
+        log.info("Starting price update")
+        priceUpdateProcessor.update()
+        log.info("Starting province update")
+        provinceUpdateProcessor.update()
+        log.info("Starting fuel type update")
+        explicitFuelUpdateProcessor.update()
         log.info("Starting gas stat update")
         gasStatUpdateProcessor.update()
         log.info("Starting province stat update")
         provinceStatUpdateProcessor.update()
-        log.info("Starting municipality stat update")
-        municipalityStatUpdateProcessor.update()
     }
 
 }

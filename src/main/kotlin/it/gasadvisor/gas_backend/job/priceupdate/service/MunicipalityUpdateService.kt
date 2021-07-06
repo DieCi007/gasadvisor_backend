@@ -16,8 +16,8 @@ class MunicipalityUpdateService @Autowired constructor(
     private val provinceRepository: ProvinceRepository
 ) : StatUpdateService<Municipality>() {
 
-    override fun save(feature: Municipality) {
-        municipalityRepository.save(feature)
+    override fun save(feature: Municipality): Municipality {
+        return municipalityRepository.save(feature)
     }
 
     override fun buildFeatures(): List<Municipality> {

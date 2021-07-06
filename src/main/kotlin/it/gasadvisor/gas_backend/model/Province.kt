@@ -15,6 +15,6 @@ class Province(
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "province")
     var municipalities: Set<Municipality>? = emptySet(),
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "province")
     var stats: List<ProvinceStat>? = emptyList()
 )

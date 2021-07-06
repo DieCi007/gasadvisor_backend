@@ -6,10 +6,7 @@ import it.gasadvisor.gas_backend.fixtures.IProvinceStationsTotalFixture.Companio
 import it.gasadvisor.gas_backend.model.GasStat
 import it.gasadvisor.gas_backend.model.Municipality
 import it.gasadvisor.gas_backend.model.Province
-import it.gasadvisor.gas_backend.repository.GasPriceRepository
-import it.gasadvisor.gas_backend.repository.GasStatRepository
-import it.gasadvisor.gas_backend.repository.MunicipalityRepository
-import it.gasadvisor.gas_backend.repository.ProvinceRepository
+import it.gasadvisor.gas_backend.repository.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -38,6 +35,9 @@ internal class GasStatUpdateServiceTest {
     @Mock
     lateinit var municipalityRepository: MunicipalityRepository
 
+    @Mock
+    lateinit var priceStatRepository: PriceStatRepository
+
     @InjectMocks
     lateinit var service: GasStatUpdateService
 
@@ -64,12 +64,12 @@ internal class GasStatUpdateServiceTest {
             .thenReturn(getIMunicipalityStationsTotal("LE", "LE"))
         whenever(municipalityRepository.findByNameAndProvince("LE", "LE"))
             .thenReturn(Optional.of(municipality))
+
         val captor = ArgumentCaptor.forClass(GasStat::class.java)
         service.update()
         verify(gasStatRepository).save(captor.capture())
         assertEquals(date, captor.value.date)
         assertEquals("LE", captor.value.leastStationsMunicipality?.name)
-        assertEquals(12, captor.value.prices.size)
     }
 
     //    private fun <T> any(type: Class<T>): T = Mockito.any(type)

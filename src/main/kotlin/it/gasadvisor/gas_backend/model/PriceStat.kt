@@ -4,7 +4,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "price_stat")
-class PriceStat(
+data class PriceStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long?,
@@ -24,13 +24,10 @@ class PriceStat(
     private var gasStat: GasStat?,
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private var provinceStat: ProvinceStat?,
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private var municipalityStat: MunicipalityStat?
+    private var provinceStat: ProvinceStat?
 ) {
     constructor(type: CommonFuelType, price: Double?, priceStatType: PriceStatType) :
-            this(null, type, price, priceStatType, null, null, null)
+            this(null, type, price, priceStatType, null, null)
 }
 
 

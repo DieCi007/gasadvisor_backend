@@ -4,10 +4,7 @@ import it.gasadvisor.gas_backend.model.CommonFuelType
 import it.gasadvisor.gas_backend.model.GasStat
 import it.gasadvisor.gas_backend.model.PriceStat
 import it.gasadvisor.gas_backend.model.PriceStatType
-import it.gasadvisor.gas_backend.repository.GasPriceRepository
-import it.gasadvisor.gas_backend.repository.GasStatRepository
-import it.gasadvisor.gas_backend.repository.MunicipalityRepository
-import it.gasadvisor.gas_backend.repository.ProvinceRepository
+import it.gasadvisor.gas_backend.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -18,24 +15,16 @@ class GasStatUpdateService @Autowired constructor(
     private val gasStatRepository: GasStatRepository,
     private val gasPriceRepository: GasPriceRepository,
     private val provinceRepository: ProvinceRepository,
-    private val municipalityRepository: MunicipalityRepository
+    private val municipalityRepository: MunicipalityRepository,
+    private val priceStatRepository: PriceStatRepository
 ) : StatUpdateService<GasStat>() {
 
-    override fun save(feature: GasStat) {
-        gasStatRepository.save(feature)
+    override fun save(feature: GasStat): GasStat {
+        return gasStatRepository.save(feature)
     }
 
     override fun buildFeatures(): List<GasStat> {
         val date = Instant.now().truncatedTo(ChronoUnit.DAYS)
-        val stats = CommonFuelType.values()
-            .flatMap {
-                val iPriceStat = gasPriceRepository.findPriceStat(it, null, null)
-                listOf(
-                    PriceStat(it, iPriceStat.getAvg(), PriceStatType.AVG),
-                    PriceStat(it, iPriceStat.getMax(), PriceStatType.MAX),
-                    PriceStat(it, iPriceStat.getMin(), PriceStatType.MIN)
-                )
-            }
         val provinceMostStationsName = provinceRepository.findOneWithMostStations().getProvince()
         val provinceMostStations = provinceRepository
             .findByName(provinceMostStationsName).orElse(null)
@@ -57,13 +46,47 @@ class GasStatUpdateService @Autowired constructor(
                 iMunicipalityLeastStations.getMunicipality(),
                 iMunicipalityLeastStations.getProvince()
             ).orElse(null)
-        return listOf(
-            GasStat(
-                null, date, stats, provinceMostStations,
-                municipalityMostStations, provinceLeastStation,
-                municipalityLeastStation
-            )
+        var gasStat = GasStat(
+            null, date, emptyList(), provinceMostStations,
+            municipalityMostStations, provinceLeastStation,
+            municipalityLeastStation
         )
+        gasStat = save(gasStat)
+        CommonFuelType.values()
+            .forEach {
+                val iPriceStat = gasPriceRepository.findPriceStat(it, null, null)
+                priceStatRepository.save(
+                    PriceStat(
+                        null,
+                        it,
+                        iPriceStat.getAvg(),
+                        PriceStatType.AVG,
+                        gasStat,
+                        null
+                    )
+                )
+                priceStatRepository.save(
+                    PriceStat(
+                        null,
+                        it,
+                        iPriceStat.getMax(),
+                        PriceStatType.MAX,
+                        gasStat,
+                        null
+                    )
+                )
+                priceStatRepository.save(
+                    PriceStat(
+                        null,
+                        it,
+                        iPriceStat.getMin(),
+                        PriceStatType.MIN,
+                        gasStat,
+                        null
+                    )
+                )
+            }
+        return emptyList()
     }
 
 }
