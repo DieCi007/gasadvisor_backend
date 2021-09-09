@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException
+import java.lang.IllegalArgumentException
 import javax.validation.ConstraintViolationException
 
 @RestControllerAdvice
@@ -46,7 +47,7 @@ class GlobalErrorHandler {
 
     @ExceptionHandler(
         value = [HttpMessageNotReadableException::class, MissingServletRequestParameterException::class,
-            MethodArgumentTypeMismatchException::class,
+            MethodArgumentTypeMismatchException::class, IllegalArgumentException::class,
             MethodArgumentNotValidException::class, ConstraintViolationException::class]
     )
     @ResponseBody

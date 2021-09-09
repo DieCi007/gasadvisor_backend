@@ -38,7 +38,7 @@ class AuthorizationFilterTest @Autowired constructor(
 
     @Test
     fun `should set authentication`() {
-        req.addHeader("authorization", jwtHelper.createJwt("diego", mutableSetOf()))
+        req.addHeader("authorization", jwtHelper.createPrimaryJwt("diego", mutableSetOf()))
         filter.doFilter(req, res, chain)
         assertTrue(SecurityContextHolder.getContext().authentication.name.equals("diego"))
     }

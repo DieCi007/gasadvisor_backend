@@ -37,7 +37,8 @@ class AuthenticationFilter(
         chain: FilterChain,
         authResult: Authentication
     ) {
-        response.addHeader("Authorization", jwtHelper.createJwt(authResult.name, authResult.authorities))
+        response.addHeader("Authorization", jwtHelper.createPrimaryJwt(authResult.name, authResult.authorities))
+        response.addHeader("refresh-token", jwtHelper.createRefreshJwt(authResult.name, authResult.authorities))
     }
 
 }
