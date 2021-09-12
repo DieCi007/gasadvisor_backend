@@ -2,12 +2,15 @@ package it.gasadvisor.gas_backend.api.auth.service
 
 import it.gasadvisor.gas_backend.api.auth.contract.RefreshTokenRequest
 import it.gasadvisor.gas_backend.api.auth.contract.RefreshTokenResponse
+import it.gasadvisor.gas_backend.api.auth.contract.UserMeResponse
+import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.exception.UserNotFoundException
 import it.gasadvisor.gas_backend.model.User
 import it.gasadvisor.gas_backend.repository.PrivilegeRepository
 import it.gasadvisor.gas_backend.repository.RoleRepository
 import it.gasadvisor.gas_backend.repository.UserRepository
 import it.gasadvisor.gas_backend.util.JwtHelper
+import it.gasadvisor.gas_backend.util.SecurityUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Service
@@ -33,6 +36,11 @@ class AuthenticationService @Autowired constructor(
         val authToken = jwtHelper.createPrimaryJwt(username, authorities)
         val refreshToken = jwtHelper.createRefreshJwt(username, authorities)
         return RefreshTokenResponse(authToken, refreshToken)
+    }
+
+    fun getMe(): UserMeResponse {
+        return repository.getUserMe(SecurityUtils.getAuthenticatedUsername())
+            .orElseThrow { NotFoundException("User not found") }
     }
 
 //    @PostConstruct

@@ -56,6 +56,7 @@ class SecurityConfig @Autowired constructor(
         configuration.allowedOrigins = listOf(*allowedOrigins)
         configuration.allowedMethods = listOf("*")
         configuration.allowedHeaders = listOf("*")
+        configuration.exposedHeaders = listOf("Authorization", "refresh-token")
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
         return source
