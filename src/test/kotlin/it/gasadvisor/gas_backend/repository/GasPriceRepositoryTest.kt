@@ -22,7 +22,7 @@ class GasPriceRepositoryTest @Autowired constructor(
 ) {
     private val station = GasStation(
         1, "diego", "", "", "", "",
-        "MI", "MI", 1.1, 1.1,
+        "MI", "MI", 1.1, 1.1, GasStationStatus.ACTIVE
     )
     private val timeRead: Instant = Instant.now()
     private val priceOne = GasPrice(
@@ -44,7 +44,7 @@ class GasPriceRepositoryTest @Autowired constructor(
         stationRepository.save(station)
         val otherMunicipalityStation = GasStation(
             2, "diego", "", "", "", "",
-            "MI", "TO", 1.1, 1.1,
+            "MI", "TO", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         stationRepository.save(otherMunicipalityStation)
         val priceTO = GasPrice(
@@ -72,7 +72,7 @@ class GasPriceRepositoryTest @Autowired constructor(
         stationRepository.save(station)
         val otherProvinceStation = GasStation(
             2, "diego", "", "", "", "",
-            "", "TO", 1.1, 1.1,
+            "", "TO", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         stationRepository.save(otherProvinceStation)
         val priceTO = GasPrice(

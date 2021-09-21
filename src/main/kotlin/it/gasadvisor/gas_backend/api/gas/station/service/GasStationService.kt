@@ -34,14 +34,26 @@ class GasStationService @Autowired constructor(
         return repository.getStationData(stationId).orElseThrow { NotFoundException("Station with given id not found") }
     }
 
-    fun findAllPaginated(page: Int?, size: Int?, sortBy: String?, sortType: SortType?): PaginatedResponse<GasStationAnalyticsResponse> {
+    fun findAllPaginated(
+        page: Int?,
+        size: Int?,
+        sortBy: String?,
+        sortType: SortType?
+    ): PaginatedResponse<GasStationAnalyticsResponse> {
         var sort = if (sortBy == null) Sort.by("id") else Sort.by(sortBy)
         sort = if (sortType == null || sortType == SortType.ASC) sort.ascending() else sort.descending()
         val pageRequest =
             if (page == null || size == null) PageRequest.of(0, 10, sort) else PageRequest.of(page, size, sort)
         val result = repository.findAllPaginated(pageRequest)
-        return PaginatedResponse(pageRequest.pageNumber, pageRequest.pageSize,
-        result.totalElements, result.totalPages, result.content)
+        return PaginatedResponse(
+            pageRequest.pageNumber, pageRequest.pageSize,
+            result.totalElements, result.totalPages, result.content
+        )
+    }
+
+    @Transactional
+    fun adminFindById(id: Long): GasStation {
+        return repository.findById(id).orElseThrow { NotFoundException("Station not found") }
     }
 }
 

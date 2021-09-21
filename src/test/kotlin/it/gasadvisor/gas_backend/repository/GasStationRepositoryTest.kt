@@ -1,6 +1,7 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.model.GasStation
+import it.gasadvisor.gas_backend.model.GasStationStatus
 import it.gasadvisor.gas_backend.model.Municipality
 import it.gasadvisor.gas_backend.model.Province
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,11 +23,11 @@ class GasStationRepositoryTest @Autowired constructor(
 ) {
     private val stationOne = GasStation(
         1, "diego", "", "", "",
-        "", "CI", "MI", 1.1, 1.1,
+        "", "CI", "MI", 1.1, 1.1, GasStationStatus.ACTIVE
     )
     private val stationTwo = GasStation(
         1, "mario", "", "", "",
-        "", "CI", "MI", 1.1, 1.1,
+        "", "CI", "MI", 1.1, 1.1, GasStationStatus.ACTIVE
     )
 
     @Test
@@ -56,11 +57,11 @@ class GasStationRepositoryTest @Autowired constructor(
         val province = Province(null, "LE", emptySet())
         val stationMI = GasStation(
             3, "diego", "", "", "",
-            "", "", "MI", 1.1, 1.1,
+            "", "", "MI", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         val stationLE = GasStation(
             2, "diego", "", "", "",
-            "", "", "LE", 1.1, 1.1,
+            "", "", "LE", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         provinceRepository.save(province)
         repository.saveAll(listOf(stationOne, stationMI, stationLE))
@@ -75,27 +76,27 @@ class GasStationRepositoryTest @Autowired constructor(
 
         val stationCO = GasStation(
             3, "diego", "", "", "",
-            "", "CO", "MI", 1.1, 1.1,
+            "", "CO", "MI", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         val stationPR = GasStation(
             2, "diego", "", "", "",
-            "", "PR", "LE", 1.1, 1.1,
+            "", "PR", "LE", 1.1, 1.1, GasStationStatus.ACTIVE
         )
 
         val stationPR2 = GasStation(
             4, "diego", "", "", "",
-            "", "PR", "LE", 1.1, 1.1,
+            "", "PR", "LE", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         val stationPR3 = GasStation(
             5, "diego", "", "", "",
-            "", "PR", "MI", 1.1, 1.1,
+            "", "PR", "MI", 1.1, 1.1, GasStationStatus.ACTIVE
         )
         province = provinceRepository.save(province)
         val municipality = Municipality(null, "CO", province)
         municipalityRepository.save(municipality)
         repository.saveAll(listOf(stationOne, stationCO, stationPR, stationPR2, stationPR3))
         val res = repository.findNotSavedMunicipalities()
-        assertTrue(res.size == 3 )
+        assertTrue(res.size == 3)
         assertTrue(res.stream().map { mp -> mp.getMunicipality() }
             .allMatch { m -> listOf("CI", "PR").contains(m) })
     }

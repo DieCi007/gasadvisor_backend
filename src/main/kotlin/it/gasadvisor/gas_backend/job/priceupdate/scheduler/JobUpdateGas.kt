@@ -9,19 +9,22 @@ import org.springframework.stereotype.Component
 
 @Component
 class JobUpdateGas @Autowired constructor(
-    @Qualifier("gasStationUpdateProcessor") private val stationPriceUpdateProcessor: GasStationUpdateProcessor,
+    @Qualifier("gasStationUpdateProcessor") private val stationUpdateProcessor: GasStationUpdateProcessor,
     @Qualifier("priceUpdateProcessor") private val priceUpdateProcessor: PriceUpdateProcessor,
     @Qualifier("provinceUpdateProcessor") private val provinceUpdateProcessor: ProvinceUpdateProcessor,
     @Qualifier("explicitFuelUpdateProcessor") private val explicitFuelUpdateProcessor: ExplicitFuelUpdateProcessor,
     @Qualifier("gasStatUpdateProcessor") private val gasStatUpdateProcessor: GasStatUpdateProcessor,
-    @Qualifier("provinceStatUpdateProcessor") private val provinceStatUpdateProcessor: ProvinceStatUpdateProcessor
+    @Qualifier("provinceStatUpdateProcessor") private val provinceStatUpdateProcessor: ProvinceStatUpdateProcessor,
+    @Qualifier("modifiedGasStationUpdateProcessor") private val modifiedGasStationUpdateProcessor: ModifiedGasStationUpdateProcessor
 ) {
     companion object : Log()
 
     @Scheduled(cron = "\${job.update.gas.cron}", zone = "Europe/Rome")
     fun init() {
         log.info("Starting station update")
-        stationPriceUpdateProcessor.update()
+        stationUpdateProcessor.update()
+        log.info("Starting modified station update")
+        modifiedGasStationUpdateProcessor.update()
         log.info("Starting price update")
         priceUpdateProcessor.update()
         log.info("Starting province update")

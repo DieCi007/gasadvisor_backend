@@ -2,6 +2,7 @@ package it.gasadvisor.gas_backend.job.priceupdate.service
 
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
 import it.gasadvisor.gas_backend.model.GasStation
+import it.gasadvisor.gas_backend.model.GasStationStatus
 import it.gasadvisor.gas_backend.util.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -37,7 +38,7 @@ class GasStationUpdateService @Autowired constructor(
         val station = GasStation(
             id, fields[1], fields[2],
             fields[3], fields[4], fields[5], fields[6],
-            fields[7], latitude, longitude
+            fields[7], latitude, longitude, GasStationStatus.ACTIVE
         )
         return Optional.of(station)
     }

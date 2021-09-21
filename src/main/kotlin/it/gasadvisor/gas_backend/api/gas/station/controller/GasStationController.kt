@@ -3,6 +3,7 @@ package it.gasadvisor.gas_backend.api.gas.station.controller
 import it.gasadvisor.gas_backend.api.gas.station.contract.*
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
 import it.gasadvisor.gas_backend.api.gas.station.service.SortType
+import it.gasadvisor.gas_backend.model.GasStation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -25,6 +26,13 @@ class GasStationController @Autowired constructor(
         @RequestParam(required = false) sortType: SortType?
     ): PaginatedResponse<GasStationAnalyticsResponse> {
         return service.findAllPaginated(page, size, sortBy, sortType)
+    }
+
+    @GetMapping("/analytics/{id}")
+    @PreAuthorize("hasAuthority(\"READ_ALL\")")
+    @ResponseStatus(HttpStatus.OK)
+    fun adminGetById(@PathVariable("id") id: Long): GasStation {
+        return service.adminFindById(id)
     }
 
     @GetMapping
