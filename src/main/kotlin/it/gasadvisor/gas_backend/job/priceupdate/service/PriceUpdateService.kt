@@ -61,4 +61,7 @@ class PriceUpdateService @Autowired constructor(
         return service.saveAll(list)
     }
 
+    override fun handleDirtyLine(line: String) {}
+    override fun beforeAll() {}
+
 }

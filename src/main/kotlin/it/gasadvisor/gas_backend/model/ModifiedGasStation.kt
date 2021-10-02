@@ -14,7 +14,7 @@ class ModifiedGasStation(
     var station: GasStation,
 
     @Enumerated(EnumType.STRING)
-    var status: GasStationStatus,
+    var status: GasStationStatus?,
 
     var owner: String? = null,
     var flag: String? = null,

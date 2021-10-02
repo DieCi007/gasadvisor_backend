@@ -17,12 +17,15 @@ class ModifiedGasStationUpdateService @Autowired constructor(
 
     override fun buildFeatures(): List<GasStation> {
         val modifiedStations = modifiedStationRepo.findAll()
-        println(modifiedStations[0].toString())
-        val ret =  modifiedStations.map { mStation ->
+        val ret = modifiedStations.map { mStation ->
             val station = mStation.station
             val address = mStation.address
             if (address != null) {
                 station.address = address
+            }
+            val status = mStation.status
+            if (status != null) {
+                station.status = status
             }
             val owner = mStation.owner
             if (owner != null) {
@@ -58,7 +61,6 @@ class ModifiedGasStationUpdateService @Autowired constructor(
             }
             return@map station
         }
-        println(ret[0].toString())
         return ret
     }
 }

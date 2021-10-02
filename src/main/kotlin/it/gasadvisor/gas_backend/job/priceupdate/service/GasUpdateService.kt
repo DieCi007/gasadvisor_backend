@@ -12,6 +12,7 @@ abstract class GasUpdateService<T> constructor(
 
     open fun handle(br: BufferedReader) {
         val timeInit = System.currentTimeMillis()
+        beforeAll()
         var totalSkipped = 0
         var totalSaved = 0
         var currentIndex = 0
@@ -54,11 +55,13 @@ abstract class GasUpdateService<T> constructor(
         val hasDirtyField = fields.stream().anyMatch { s -> s.split(delimiter).size > maxColumnsPerRow }
         val isDirtyLine = fields.size != maxColumnsPerRow
         if (hasDirtyField || isDirtyLine) {
+            handleDirtyLine(line)
             return Optional.empty()
         }
         return entityFromFields(fields)
     }
-
+    abstract fun beforeAll()
+    abstract fun handleDirtyLine(line: String)
     abstract fun entityFromFields(fields: List<String>): Optional<T>
     abstract fun saveAll(list: List<T>)
 }

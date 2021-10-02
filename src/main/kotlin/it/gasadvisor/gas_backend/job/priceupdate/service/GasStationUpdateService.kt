@@ -1,8 +1,10 @@
 package it.gasadvisor.gas_backend.job.priceupdate.service
 
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.service.UnresolvedGasStationService
 import it.gasadvisor.gas_backend.model.GasStation
 import it.gasadvisor.gas_backend.model.GasStationStatus
+import it.gasadvisor.gas_backend.model.UnresolvedGasStation
 import it.gasadvisor.gas_backend.util.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -12,9 +14,12 @@ import java.util.*
 @Service
 class GasStationUpdateService @Autowired constructor(
     private val service: GasStationService,
+    private val unresolvedService: UnresolvedGasStationService,
     @Value("\${csv.delimiter}") val delimiter: String
 ) : GasUpdateService<GasStation>(delimiter, 10) {
     companion object : Log()
+
+    lateinit var unresolvedStations: List<UnresolvedGasStation>
 
     override fun entityFromFields(fields: List<String>): Optional<GasStation> {
         val id = try {
@@ -45,6 +50,18 @@ class GasStationUpdateService @Autowired constructor(
 
     override fun saveAll(list: List<GasStation>) {
         service.saveAll(list)
+    }
+
+    override fun handleDirtyLine(line: String) {
+        val saved = unresolvedStations.find { it.value == line }
+        if (saved == null) {
+            unresolvedService.save(UnresolvedGasStation(line,false))
+            log.info("Saved unresolved gas station")
+        }
+    }
+
+    override fun beforeAll() {
+        unresolvedStations = unresolvedService.getAll()
     }
 
 }
