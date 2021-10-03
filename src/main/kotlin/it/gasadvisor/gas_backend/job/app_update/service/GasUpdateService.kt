@@ -32,6 +32,9 @@ abstract class GasUpdateService<T> constructor(
             if (optionalEntity.isEmpty) {
                 totalSkipped++
                 currentLine = br.readLine()
+                if (currentLine == null && listToSave.size > 0) {
+                    saveAll(listToSave)
+                }
                 continue
             }
             listToSave.add(optionalEntity.get())
@@ -42,7 +45,6 @@ abstract class GasUpdateService<T> constructor(
             currentLine = br.readLine()
             if (currentLine == null && listToSave.size > 0) {
                 saveAll(listToSave)
-                listToSave.clear()
             }
             totalSaved++
         }
@@ -60,6 +62,7 @@ abstract class GasUpdateService<T> constructor(
         }
         return entityFromFields(fields)
     }
+
     abstract fun beforeAll()
     abstract fun handleDirtyLine(line: String)
     abstract fun entityFromFields(fields: List<String>): Optional<T>

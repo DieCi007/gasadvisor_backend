@@ -10,7 +10,9 @@ data class FuelMinPrice(
     var id: Long?,
 
     @Column(nullable = false, unique = true)
+    @Enumerated(EnumType.STRING)
     var type: CommonFuelType,
 
+    @Column(nullable = false)
     var minPrice: Double
 )

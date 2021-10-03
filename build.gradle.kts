@@ -28,7 +28,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation ("org.springframework.retry:spring-retry:1.2.4.RELEASE")
+    implementation("org.springframework.retry:spring-retry:1.2.4.RELEASE")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -73,7 +73,7 @@ compileKotlin.kotlinOptions {
     languageVersion = "1.5"
 }
 
-tasks{
+tasks {
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xskip-prerelease-check")
