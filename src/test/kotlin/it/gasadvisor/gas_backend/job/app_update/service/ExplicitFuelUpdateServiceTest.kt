@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.model.ExplicitFuelType
+import it.gasadvisor.gas_backend.model.entities.ExplicitFuelType
 import it.gasadvisor.gas_backend.repository.ExplicitFuelRepository
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import org.junit.jupiter.api.Assertions.assertEquals

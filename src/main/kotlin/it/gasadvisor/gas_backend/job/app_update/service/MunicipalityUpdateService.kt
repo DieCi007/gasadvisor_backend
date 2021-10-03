@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.model.Municipality
+import it.gasadvisor.gas_backend.model.entities.Municipality
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.MunicipalityRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository

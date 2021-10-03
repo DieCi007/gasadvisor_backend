@@ -1,5 +1,5 @@
 package it.gasadvisor.gas_backend.config
-import it.gasadvisor.gas_backend.model.User
+import it.gasadvisor.gas_backend.model.entities.User
 import org.hibernate.Hibernate
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

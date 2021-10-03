@@ -1,5 +1,7 @@
-package it.gasadvisor.gas_backend.model
+package it.gasadvisor.gas_backend.model.entities
 
+import it.gasadvisor.gas_backend.model.entities.PriceStat
+import it.gasadvisor.gas_backend.model.entities.Province
 import java.time.Instant
 import javax.persistence.*
 

@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.model.GasStation
+import it.gasadvisor.gas_backend.model.entities.GasStation
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.ModifiedGasStationRepository
 import org.springframework.beans.factory.annotation.Autowired

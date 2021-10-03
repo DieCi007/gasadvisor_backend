@@ -2,14 +2,14 @@ package it.gasadvisor.gas_backend.api.gas.min_price.controller
 
 import it.gasadvisor.gas_backend.api.gas.min_price.contract.UpdateMinPriceRequest
 import it.gasadvisor.gas_backend.api.gas.min_price.service.MinPriceService
-import it.gasadvisor.gas_backend.model.FuelMinPrice
+import it.gasadvisor.gas_backend.model.entities.FuelMinPrice
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping(value = ["/api/v1/gas/minprice"])
+@RequestMapping(value = ["/api/v1/gas/min-price"])
 class MinPriceController @Autowired constructor(
     private val service: MinPriceService
 ) {

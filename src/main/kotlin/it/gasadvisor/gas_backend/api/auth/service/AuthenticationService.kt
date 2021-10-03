@@ -5,7 +5,7 @@ import it.gasadvisor.gas_backend.api.auth.contract.RefreshTokenResponse
 import it.gasadvisor.gas_backend.api.auth.contract.UserMeResponse
 import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.exception.UserNotFoundException
-import it.gasadvisor.gas_backend.model.User
+import it.gasadvisor.gas_backend.model.entities.User
 import it.gasadvisor.gas_backend.repository.PrivilegeRepository
 import it.gasadvisor.gas_backend.repository.RoleRepository
 import it.gasadvisor.gas_backend.repository.UserRepository

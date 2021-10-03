@@ -1,9 +1,9 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.GetAllUnresolvedResponse
 import it.gasadvisor.gas_backend.api.gas.unresolved_station.service.UnresolvedGasStationService
 import it.gasadvisor.gas_backend.exception.NotFoundException
-import it.gasadvisor.gas_backend.model.UnresolvedGasStation
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -57,7 +57,7 @@ internal class GasStationUpdateServiceTest {
         val bufferedReader = BufferedReader(InputStreamReader(fileStream))
         whenever(unresolvedStationService.getAll()).thenReturn(
             listOf(
-                UnresolvedGasStation(
+                GetAllUnresolvedResponse(null,
                     "46351DI BENEDETTO CARBURANTI S.R.L.;DBCarburanti;Altro;VILLASETA;VILLASETA S.S.115 KM 186,225;AGRIGENTO;AG;37.29331979071350;13.569776862859700",
                     false
                 )

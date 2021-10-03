@@ -1,6 +1,8 @@
 package it.gasadvisor.gas_backend.api.gas.unresolved_station.service
 
-import it.gasadvisor.gas_backend.model.UnresolvedGasStation
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.GetAllUnresolvedResponse
+import it.gasadvisor.gas_backend.exception.NotFoundException
+import it.gasadvisor.gas_backend.model.entities.UnresolvedGasStation
 import it.gasadvisor.gas_backend.repository.UnresolvedGasStationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -13,11 +15,13 @@ class UnresolvedGasStationService @Autowired constructor(
         return repo.save(station)
     }
 
-    fun getUnresolved(): List<UnresolvedGasStation> {
-        return repo.findByResolved(false)
+    fun getAll(): List<GetAllUnresolvedResponse> {
+        return repo.findAll().map { GetAllUnresolvedResponse.fromUnresolvedStation(it) }
     }
 
-    fun getAll(): List<UnresolvedGasStation> {
-        return repo.findAll()
+    fun resolve(id: Long) {
+        val saved = repo.findById(id).orElseThrow { NotFoundException("Could not find this unresolved station") }
+        saved.isResolved = true
+        repo.save(saved)
     }
 }

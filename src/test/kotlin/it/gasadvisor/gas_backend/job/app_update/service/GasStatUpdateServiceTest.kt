@@ -3,9 +3,9 @@ package it.gasadvisor.gas_backend.job.app_update.service
 import it.gasadvisor.gas_backend.fixtures.IMunicipalityStationsTotalFixture.Companion.getIMunicipalityStationsTotal
 import it.gasadvisor.gas_backend.fixtures.IPriceStatFixture.Companion.getIPriceStat
 import it.gasadvisor.gas_backend.fixtures.IProvinceStationsTotalFixture.Companion.getIProvinceStationsTotal
-import it.gasadvisor.gas_backend.model.GasStat
-import it.gasadvisor.gas_backend.model.Municipality
-import it.gasadvisor.gas_backend.model.Province
+import it.gasadvisor.gas_backend.model.entities.GasStat
+import it.gasadvisor.gas_backend.model.entities.Municipality
+import it.gasadvisor.gas_backend.model.entities.Province
 import it.gasadvisor.gas_backend.repository.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

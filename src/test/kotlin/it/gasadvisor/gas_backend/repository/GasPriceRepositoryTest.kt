@@ -1,6 +1,8 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.model.*
+import it.gasadvisor.gas_backend.model.entities.*
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue

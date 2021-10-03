@@ -1,4 +1,4 @@
-package it.gasadvisor.gas_backend.model
+package it.gasadvisor.gas_backend.model.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.io.Serializable

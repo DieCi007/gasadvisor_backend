@@ -4,10 +4,10 @@ import it.gasadvisor.gas_backend.api.gas.explicit_fuel.service.ExplicitFuelServi
 import it.gasadvisor.gas_backend.api.gas.min_price.service.MinPriceService
 import it.gasadvisor.gas_backend.api.gas.price.service.GasPriceService
 import it.gasadvisor.gas_backend.exception.NotFoundException
-import it.gasadvisor.gas_backend.model.CommonFuelType
-import it.gasadvisor.gas_backend.model.ExplicitFuelType
-import it.gasadvisor.gas_backend.model.FuelMinPrice
-import it.gasadvisor.gas_backend.model.GasPrice
+import it.gasadvisor.gas_backend.model.entities.ExplicitFuelType
+import it.gasadvisor.gas_backend.model.entities.FuelMinPrice
+import it.gasadvisor.gas_backend.model.entities.GasPrice
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

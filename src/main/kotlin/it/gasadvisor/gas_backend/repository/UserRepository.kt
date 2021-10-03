@@ -1,7 +1,7 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.api.auth.contract.UserMeResponse
-import it.gasadvisor.gas_backend.model.User
+import it.gasadvisor.gas_backend.model.entities.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param

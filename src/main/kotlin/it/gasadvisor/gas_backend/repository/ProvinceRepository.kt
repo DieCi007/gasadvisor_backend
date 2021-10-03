@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.Province
+import it.gasadvisor.gas_backend.model.entities.Province
 import it.gasadvisor.gas_backend.repository.contract.IProvinceStationsTotal
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

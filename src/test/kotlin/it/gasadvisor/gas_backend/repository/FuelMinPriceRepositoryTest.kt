@@ -1,7 +1,7 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.CommonFuelType
-import it.gasadvisor.gas_backend.model.FuelMinPrice
+import it.gasadvisor.gas_backend.model.entities.FuelMinPrice
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

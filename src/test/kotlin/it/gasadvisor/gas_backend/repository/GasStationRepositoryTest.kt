@@ -1,9 +1,9 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.GasStation
-import it.gasadvisor.gas_backend.model.GasStationStatus
-import it.gasadvisor.gas_backend.model.Municipality
-import it.gasadvisor.gas_backend.model.Province
+import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.entities.GasStationStatus
+import it.gasadvisor.gas_backend.model.entities.Municipality
+import it.gasadvisor.gas_backend.model.entities.Province
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach

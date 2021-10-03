@@ -1,9 +1,9 @@
 package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationPriceResponse
-import it.gasadvisor.gas_backend.model.CommonFuelType
-import it.gasadvisor.gas_backend.model.GasPrice
-import it.gasadvisor.gas_backend.model.GasPriceId
+import it.gasadvisor.gas_backend.model.entities.GasPrice
+import it.gasadvisor.gas_backend.model.entities.GasPriceId
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.repository.contract.IPriceStat
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query

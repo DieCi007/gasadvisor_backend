@@ -1,8 +1,10 @@
 package it.gasadvisor.gas_backend.api.gas.station.service
 
 import it.gasadvisor.gas_backend.api.gas.station.contract.*
+import it.gasadvisor.gas_backend.exception.BadRequestException
 import it.gasadvisor.gas_backend.exception.NotFoundException
-import it.gasadvisor.gas_backend.model.GasStation
+import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,8 +57,12 @@ class GasStationService @Autowired constructor(
     fun adminFindById(id: Long): GasStation {
         return repository.findById(id).orElseThrow { NotFoundException("Station not found") }
     }
-}
 
-enum class SortType {
-    ASC, DESC
+    fun create(station: NewGasStationRequest): GasStation {
+        if (repository.findById(station.id).isPresent) {
+            throw BadRequestException("This station already exists. Please update it.")
+        }
+        val newStation = station.toGasStation()
+        return repository.save(newStation)
+    }
 }

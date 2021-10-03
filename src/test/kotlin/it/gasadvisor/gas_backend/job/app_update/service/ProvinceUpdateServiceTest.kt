@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.model.Province
+import it.gasadvisor.gas_backend.model.entities.Province
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository
 import org.junit.jupiter.api.Assertions.assertTrue

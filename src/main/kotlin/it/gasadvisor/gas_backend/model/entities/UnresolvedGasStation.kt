@@ -1,4 +1,4 @@
-package it.gasadvisor.gas_backend.model
+package it.gasadvisor.gas_backend.model.entities
 
 import javax.persistence.*
 
@@ -9,7 +9,6 @@ class UnresolvedGasStation(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
     var value: String,
-    @Column(name = "isResolved")
     var isResolved: Boolean
 ) {
     constructor(value: String, resolved: Boolean) : this(null, value, resolved)

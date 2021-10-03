@@ -1,8 +1,8 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.model.GasStation
-import it.gasadvisor.gas_backend.model.GasStationStatus
-import it.gasadvisor.gas_backend.model.ModifiedGasStation
+import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.entities.GasStationStatus
+import it.gasadvisor.gas_backend.model.entities.ModifiedGasStation
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.ModifiedGasStationRepository
 import org.junit.jupiter.api.Assertions.assertEquals

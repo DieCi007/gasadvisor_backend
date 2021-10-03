@@ -1,10 +1,9 @@
 package it.gasadvisor.gas_backend.api.gas.min_price.service
 
 import it.gasadvisor.gas_backend.api.gas.min_price.contract.UpdateMinPriceRequest
-import it.gasadvisor.gas_backend.model.CommonFuelType
-import it.gasadvisor.gas_backend.model.FuelMinPrice
+import it.gasadvisor.gas_backend.model.entities.FuelMinPrice
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.repository.FuelMinPriceRepository
-import org.antlr.v4.runtime.misc.MurmurHash.update
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks

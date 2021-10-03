@@ -1,9 +1,9 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.model.CommonFuelType
-import it.gasadvisor.gas_backend.model.PriceStat
-import it.gasadvisor.gas_backend.model.PriceStatType
-import it.gasadvisor.gas_backend.model.ProvinceStat
+import it.gasadvisor.gas_backend.model.entities.PriceStat
+import it.gasadvisor.gas_backend.model.enums.PriceStatType
+import it.gasadvisor.gas_backend.model.entities.ProvinceStat
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.PriceStatRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository

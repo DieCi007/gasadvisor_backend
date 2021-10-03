@@ -1,5 +1,7 @@
-package it.gasadvisor.gas_backend.model
+package it.gasadvisor.gas_backend.model.entities
 
+import it.gasadvisor.gas_backend.model.enums.PriceStatType
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import javax.persistence.*
 
 @Entity

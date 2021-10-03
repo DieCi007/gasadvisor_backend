@@ -1,8 +1,8 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
 import it.gasadvisor.gas_backend.fixtures.IPriceStatFixture.Companion.getIPriceStat
-import it.gasadvisor.gas_backend.model.Province
-import it.gasadvisor.gas_backend.model.ProvinceStat
+import it.gasadvisor.gas_backend.model.entities.Province
+import it.gasadvisor.gas_backend.model.entities.ProvinceStat
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.PriceStatRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository

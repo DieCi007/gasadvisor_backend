@@ -1,10 +1,11 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.GetAllUnresolvedResponse
 import it.gasadvisor.gas_backend.api.gas.unresolved_station.service.UnresolvedGasStationService
-import it.gasadvisor.gas_backend.model.GasStation
-import it.gasadvisor.gas_backend.model.GasStationStatus
-import it.gasadvisor.gas_backend.model.UnresolvedGasStation
+import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.entities.GasStationStatus
+import it.gasadvisor.gas_backend.model.entities.UnresolvedGasStation
 import it.gasadvisor.gas_backend.util.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -19,7 +20,7 @@ class GasStationUpdateService @Autowired constructor(
 ) : GasUpdateService<GasStation>(delimiter, 10) {
     companion object : Log()
 
-    lateinit var unresolvedStations: List<UnresolvedGasStation>
+    lateinit var unresolvedStations: List<GetAllUnresolvedResponse>
 
     override fun entityFromFields(fields: List<String>): Optional<GasStation> {
         val id = try {

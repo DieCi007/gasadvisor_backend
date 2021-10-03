@@ -1,4 +1,4 @@
-package it.gasadvisor.gas_backend.model
+package it.gasadvisor.gas_backend.model.entities
 
 import javax.persistence.*
 
