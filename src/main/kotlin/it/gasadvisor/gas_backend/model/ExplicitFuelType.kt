@@ -15,6 +15,5 @@ data class ExplicitFuelType(
     @Enumerated(EnumType.STRING)
     var commonType: CommonFuelType?
 ) {
-    constructor(name: String) : this(null, name, null) {
-    }
+    constructor(name: String) : this(null, name, null)
 }
