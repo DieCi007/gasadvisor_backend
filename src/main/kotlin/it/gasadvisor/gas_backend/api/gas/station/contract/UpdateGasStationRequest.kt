@@ -5,7 +5,7 @@ import it.gasadvisor.gas_backend.model.entities.GasStationStatus
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-data class NewGasStationRequest(
+data class UpdateGasStationRequest(
     @NotNull
     var id: Long,
     @NotBlank
