@@ -23,9 +23,10 @@ class GasStationController @Autowired constructor(
         @RequestParam(required = false) page: Int?,
         @RequestParam(required = false) size: Int?,
         @RequestParam(required = false) sortBy: String?,
-        @RequestParam(required = false) sortType: SortType?
+        @RequestParam(required = false) sortType: SortType?,
+        @RequestParam(required = false) query: String?,
     ): PaginatedResponse<GasStationAnalyticsResponse> {
-        return service.findAllPaginated(page, size, sortBy, sortType)
+        return service.findAllPaginated(page, size, sortBy, sortType, query)
     }
 
     @GetMapping("/analytics/{id}")

@@ -40,16 +40,20 @@ class GasStationService @Autowired constructor(
         page: Int?,
         size: Int?,
         sortBy: String?,
-        sortType: SortType?
+        sortType: SortType?,
+        query: String?
     ): PaginatedResponse<GasStationAnalyticsResponse> {
         var sort = if (sortBy == null) Sort.by("id") else Sort.by(sortBy)
         sort = if (sortType == null || sortType == SortType.ASC) sort.ascending() else sort.descending()
         val pageRequest =
             if (page == null || size == null) PageRequest.of(0, 10, sort) else PageRequest.of(page, size, sort)
-        val result = repository.findAllPaginated(pageRequest)
+        val searchBy = query ?: ""
+        val spec = StationSpecification.filter(searchBy)
+        val result = repository.findAll(spec, pageRequest)
         return PaginatedResponse(
             pageRequest.pageNumber, pageRequest.pageSize,
-            result.totalElements, result.totalPages, result.content
+            result.totalElements, result.totalPages,
+            result.content.map { GasStationAnalyticsResponse.fromGasStation(it) }
         )
     }
 
