@@ -4,9 +4,11 @@ import it.gasadvisor.gas_backend.api.gas.station.contract.*
 import it.gasadvisor.gas_backend.exception.BadRequestException
 import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.entities.ModifiedGasStation
 import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.GasStationRepository
+import it.gasadvisor.gas_backend.repository.ModifiedGasStationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class GasStationService @Autowired constructor(
     private val repository: GasStationRepository,
+    private val modifiedStationRepository: ModifiedGasStationRepository,
     private val priceRepository: GasPriceRepository
 ) {
 
@@ -68,5 +71,23 @@ class GasStationService @Autowired constructor(
         }
         val newStation = station.toGasStation()
         return repository.save(newStation)
+    }
+
+    fun update(station: UpdateGasStationRequest): GasStationAnalyticsResponse {
+        val saved = repository.findById(station.id).orElseThrow { NotFoundException("Gas station not found") }
+        val modifiedStation = modifiedStationRepository.findByStationId(station.id).map { it.update(station, saved) }
+            .orElse(ModifiedGasStation.fromUpdateRequest(station, saved))
+        modifiedStationRepository.save(modifiedStation)
+        saved.owner = station.owner
+        saved.flag = station.flag
+        saved.type = station.type
+        saved.name = station.name
+        saved.address = station.address
+        saved.municipality = station.municipality
+        saved.province = station.province
+        saved.latitude = station.latitude
+        saved.longitude = station.longitude
+        saved.status = station.status
+        return GasStationAnalyticsResponse.fromGasStation(repository.save(saved))
     }
 }

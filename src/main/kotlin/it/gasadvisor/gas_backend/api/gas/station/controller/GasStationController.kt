@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping(value = ["/api/v1/gas/station"], produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -45,8 +46,15 @@ class GasStationController @Autowired constructor(
     @PostMapping
     @PreAuthorize("hasAuthority(\"WRITE_ALL\")")
     @ResponseStatus(HttpStatus.OK)
-    fun create(@RequestBody station: UpdateGasStationRequest): GasStation {
+    fun create(@RequestBody @Valid station: UpdateGasStationRequest): GasStation {
         return service.create(station)
+    }
+
+    @PatchMapping
+    @PreAuthorize("hasAuthority(\"WRITE_ALL\")")
+    @ResponseStatus(HttpStatus.OK)
+    fun update(@RequestBody @Valid station: UpdateGasStationRequest): GasStationAnalyticsResponse {
+        return service.update(station)
     }
 
     @GetMapping("/{stationId}/today")

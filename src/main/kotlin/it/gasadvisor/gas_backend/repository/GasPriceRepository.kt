@@ -6,12 +6,13 @@ import it.gasadvisor.gas_backend.model.entities.GasPriceId
 import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.repository.contract.IPriceStat
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId> {
+interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId>, JpaSpecificationExecutor<GasPrice> {
     @Query(
         "select new it.gasadvisor.gas_backend.api.gas.station.contract.GetStationPriceResponse(p.price, p.id.isSelf, p.id.readDate, p.id.description) " +
                 "from GasPrice p where p.id.gasStation.id = :id and " +
@@ -37,4 +38,5 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId> {
         @Param("province") province: String?,
         @Param("municipality") municipality: String?
     ): IPriceStat
+
 }

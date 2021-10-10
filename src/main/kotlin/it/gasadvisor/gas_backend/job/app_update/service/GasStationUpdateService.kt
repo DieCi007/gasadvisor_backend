@@ -39,6 +39,7 @@ class GasStationUpdateService @Autowired constructor(
             null
         }
         if (id == null || latitude == null || longitude == null) {
+            handleDirtyLine(fields.joinToString(":"))
             return Optional.empty()
         }
         val station = GasStation(
