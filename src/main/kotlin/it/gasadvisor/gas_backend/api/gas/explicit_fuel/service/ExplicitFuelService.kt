@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.explicit_fuel.service
 
+import it.gasadvisor.gas_backend.api.gas.explicit_fuel.contract.AssignAllFuelRequest
 import it.gasadvisor.gas_backend.api.gas.explicit_fuel.contract.AssignFuelRequest
 import it.gasadvisor.gas_backend.api.gas.explicit_fuel.contract.IExplicitFuelType
 import it.gasadvisor.gas_backend.exception.NotFoundException
@@ -38,6 +39,18 @@ class ExplicitFuelService @Autowired constructor(
                 return saved.commonType
             }
 
+        }
+    }
+
+    fun assignAllFuels(request: List<AssignAllFuelRequest>) {
+        request.forEach { type ->
+            val commonType = type.type
+            val fuels = type.fuels.map { repo.findById(it).orElseGet { null } }
+                .filter { it != null }.map { f ->
+                    f.commonType = commonType
+                    f
+                }
+            repo.saveAll(fuels)
         }
     }
 }

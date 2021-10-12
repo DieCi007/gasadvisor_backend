@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.explicit_fuel.controller
 
+import it.gasadvisor.gas_backend.api.gas.explicit_fuel.contract.AssignAllFuelRequest
 import it.gasadvisor.gas_backend.api.gas.explicit_fuel.contract.AssignFuelRequest
 import it.gasadvisor.gas_backend.api.gas.explicit_fuel.contract.IExplicitFuelType
 import it.gasadvisor.gas_backend.api.gas.explicit_fuel.service.ExplicitFuelService
@@ -18,6 +19,15 @@ class ExplicitFuelController @Autowired constructor(
     @ResponseStatus(HttpStatus.OK)
     fun findAll(): List<IExplicitFuelType> {
         return service.adminGetAll()
+    }
+
+    @PatchMapping
+    @PreAuthorize("hasAuthority(\"WRITE_ALL\")")
+    @ResponseStatus(HttpStatus.OK)
+    fun assignAll(
+        @RequestBody request: List<AssignAllFuelRequest>
+    ){
+        return service.assignAllFuels(request)
     }
 
     @PatchMapping("/{id}")
