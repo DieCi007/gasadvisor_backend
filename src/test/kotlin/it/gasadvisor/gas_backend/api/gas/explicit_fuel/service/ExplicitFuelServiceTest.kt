@@ -47,6 +47,7 @@ internal class ExplicitFuelServiceTest {
         val request = listOf(
             AssignAllFuelRequest(CommonFuelType.GASOLIO, listOf(1, 2)),
             AssignAllFuelRequest(CommonFuelType.BENZINA, listOf(3, 4)),
+            AssignAllFuelRequest(null, listOf(5, 6)),
         )
 
         whenever(repo.findById(1)).thenReturn(
@@ -69,10 +70,17 @@ internal class ExplicitFuelServiceTest {
                 ExplicitFuelType(4, "zina", null)
             )
         )
+        whenever(repo.findById(5)).thenReturn(
+            Optional.of(
+                ExplicitFuelType(5, "some", CommonFuelType.BENZINA)
+            )
+        )
+        whenever(repo.findById(6)).thenReturn(Optional.empty())
         service.assignAllFuels(request)
-        verify(repo, times(2)).saveAll(capture(captor))
+        verify(repo, times(3)).saveAll(capture(captor))
         val firstBatch = captor.firstValue
         val secondBatch = captor.secondValue
+        val third = captor.thirdValue
         assertEquals(CommonFuelType.GASOLIO, firstBatch[0].commonType)
         assertEquals("gas", firstBatch[0].name)
         assertEquals(CommonFuelType.GASOLIO, firstBatch[1].commonType)
@@ -83,5 +91,8 @@ internal class ExplicitFuelServiceTest {
         assertEquals(CommonFuelType.BENZINA, secondBatch[1].commonType)
         assertEquals("zina", secondBatch[1].name)
         assertEquals(2, secondBatch.size)
+        assertEquals(1, third.size)
+        assertEquals(null, third[0].commonType)
+        assertEquals("some", third[0].name)
     }
 }

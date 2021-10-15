@@ -45,8 +45,8 @@ class GasStationController @Autowired constructor(
 
     @PostMapping
     @PreAuthorize("hasAuthority(\"WRITE_ALL\")")
-    @ResponseStatus(HttpStatus.OK)
-    fun create(@RequestBody @Valid station: UpdateGasStationRequest): GasStation {
+    @ResponseStatus(HttpStatus.CREATED)
+    fun create(@RequestBody @Valid station: UpdateGasStationRequest) {
         return service.create(station)
     }
 

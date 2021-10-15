@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.unresolved_station.service
 
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.ChangeUnresolvedStationRequest
 import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.GetAllUnresolvedResponse
 import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.model.entities.UnresolvedGasStation
@@ -19,9 +20,9 @@ class UnresolvedGasStationService @Autowired constructor(
         return repo.findAll().map { GetAllUnresolvedResponse.fromUnresolvedStation(it) }
     }
 
-    fun resolve(id: Long) {
+    fun resolve(id: Long, request: ChangeUnresolvedStationRequest) {
         val saved = repo.findById(id).orElseThrow { NotFoundException("Could not find this unresolved station") }
-        saved.isResolved = true
+        saved.isResolved = request.isResolved
         repo.save(saved)
     }
 }

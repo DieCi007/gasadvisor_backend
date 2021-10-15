@@ -25,7 +25,7 @@ internal class MinPriceServiceTest {
     fun `should update min price`() {
         val saved = FuelMinPrice(1, CommonFuelType.GASOLIO, 1.1)
         whenever(repo.findByType(CommonFuelType.GASOLIO)).thenReturn(Optional.of(saved))
-        service.update(UpdateMinPriceRequest(CommonFuelType.GASOLIO, 1.7))
+        service.update(listOf(UpdateMinPriceRequest(CommonFuelType.GASOLIO, 1.7)))
         verify(repo).save(saved.copy(minPrice = 1.7))
     }
 }

@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.unresolved_station.service
 
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.ChangeUnresolvedStationRequest
 import it.gasadvisor.gas_backend.model.entities.UnresolvedGasStation
 import it.gasadvisor.gas_backend.repository.UnresolvedGasStationRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -23,14 +24,27 @@ internal class UnresolvedGasStationServiceTest {
     lateinit var service: UnresolvedGasStationService
 
     @Test
-    fun `should resolved station`() {
+    fun `should resolve station`() {
         whenever(repo.findById(1)).thenReturn(
             Optional.of(UnresolvedGasStation(1, "something", false))
         )
+        val request = ChangeUnresolvedStationRequest(true)
         val captor = ArgumentCaptor.forClass(UnresolvedGasStation::class.java)
-        service.resolve(1)
+        service.resolve(1, request)
         verify(repo, times(1)).save(captor.capture())
         assertEquals(true, captor.value.isResolved)
+    }
+
+    @Test
+    fun `should unresolve station`() {
+        whenever(repo.findById(1)).thenReturn(
+            Optional.of(UnresolvedGasStation(1, "something", true))
+        )
+        val request = ChangeUnresolvedStationRequest(false)
+        val captor = ArgumentCaptor.forClass(UnresolvedGasStation::class.java)
+        service.resolve(1, request)
+        verify(repo, times(1)).save(captor.capture())
+        assertEquals(false, captor.value.isResolved)
     }
 
 }

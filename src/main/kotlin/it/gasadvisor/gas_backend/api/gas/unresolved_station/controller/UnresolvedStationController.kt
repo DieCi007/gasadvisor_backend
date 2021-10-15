@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.unresolved_station.controller
 
+import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.ChangeUnresolvedStationRequest
 import it.gasadvisor.gas_backend.api.gas.unresolved_station.contract.GetAllUnresolvedResponse
 import it.gasadvisor.gas_backend.api.gas.unresolved_station.service.UnresolvedGasStationService
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,10 +20,10 @@ class UnresolvedStationController @Autowired constructor(
         return service.getAll()
     }
 
-    @PatchMapping("/{id}/resolve")
+    @PatchMapping("/{id}/status")
     @PreAuthorize("hasAuthority(\"WRITE_ALL\")")
     @ResponseStatus(HttpStatus.OK)
-    fun resolve(@PathVariable("id") id: Long) {
-        return service.resolve(id)
+    fun resolve(@PathVariable("id") id: Long, @RequestBody request: ChangeUnresolvedStationRequest) {
+        return service.resolve(id, request)
     }
 }

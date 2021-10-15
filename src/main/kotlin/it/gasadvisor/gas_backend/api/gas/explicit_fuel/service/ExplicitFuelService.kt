@@ -45,8 +45,7 @@ class ExplicitFuelService @Autowired constructor(
     fun assignAllFuels(request: List<AssignAllFuelRequest>) {
         request.forEach { type ->
             val commonType = type.type
-            val fuels = type.fuels.map { repo.findById(it).orElseGet { null } }
-                .filter { it != null }.map { f ->
+            val fuels = type.fuels.mapNotNull { repo.findById(it).orElseGet { null } }.map { f ->
                     f.commonType = commonType
                     f
                 }

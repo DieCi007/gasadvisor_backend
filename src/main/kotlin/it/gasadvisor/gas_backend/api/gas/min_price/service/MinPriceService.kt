@@ -14,9 +14,12 @@ class MinPriceService @Autowired constructor(
         return repo.findAll()
     }
 
-    fun update(req: UpdateMinPriceRequest) {
-        val price = repo.findByType(req.type).orElseGet { FuelMinPrice(null, req.type, req.minPrice) }
-        price.minPrice = req.minPrice
-        repo.save(price)
+    fun update(req: List<UpdateMinPriceRequest>) {
+        req.forEach { price ->
+            val saved = repo.findByType(price.type).orElseGet { FuelMinPrice(null, price.type, price.minPrice) }
+            saved.minPrice = price.minPrice
+            repo.save(saved)
+        }
+
     }
 }

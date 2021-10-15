@@ -65,12 +65,12 @@ class GasStationService @Autowired constructor(
         return repository.findById(id).orElseThrow { NotFoundException("Station not found") }
     }
 
-    fun create(station: UpdateGasStationRequest): GasStation {
+    fun create(station: UpdateGasStationRequest) {
         if (repository.findById(station.id).isPresent) {
             throw BadRequestException("This station already exists. Please update it.")
         }
         val newStation = station.toGasStation()
-        return repository.save(newStation)
+        repository.save(newStation)
     }
 
     fun update(station: UpdateGasStationRequest): GasStationAnalyticsResponse {

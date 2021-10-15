@@ -16,7 +16,7 @@ class MinPriceController @Autowired constructor(
     @PatchMapping
     @PreAuthorize("hasAuthority(\"WRITE_ALL\")")
     @ResponseStatus(HttpStatus.OK)
-    fun updateMinPrice(@RequestBody request: UpdateMinPriceRequest) {
+    fun updateMinPrice(@RequestBody request: List<UpdateMinPriceRequest>) {
         return service.update(request)
     }
 
