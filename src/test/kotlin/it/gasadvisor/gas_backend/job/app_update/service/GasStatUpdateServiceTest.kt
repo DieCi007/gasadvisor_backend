@@ -5,18 +5,15 @@ import it.gasadvisor.gas_backend.fixtures.IPriceStatFixture.Companion.getIPriceS
 import it.gasadvisor.gas_backend.fixtures.IProvinceStationsTotalFixture.Companion.getIProvinceStationsTotal
 import it.gasadvisor.gas_backend.model.entities.GasStat
 import it.gasadvisor.gas_backend.model.entities.Municipality
+import it.gasadvisor.gas_backend.model.entities.PriceStat
 import it.gasadvisor.gas_backend.model.entities.Province
 import it.gasadvisor.gas_backend.repository.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentCaptor
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -41,6 +38,9 @@ internal class GasStatUpdateServiceTest {
     @InjectMocks
     lateinit var service: GasStatUpdateService
 
+    @Captor
+    lateinit var listCaptor: ArgumentCaptor<List<PriceStat>>
+
     @Test
     fun `update should work`() {
         val province = Province(1, "LE")
@@ -48,6 +48,8 @@ internal class GasStatUpdateServiceTest {
         val municipality = Municipality(1, "LE", province)
         whenever(gasPriceRepository.findPriceStat(any(), any(), any()))
             .thenReturn(getIPriceStat())
+        whenever(gasPriceRepository.findMediumPrice(any(), any(), any()))
+            .thenReturn(2.0)
         whenever(provinceRepository.findOneWithMostStations())
             .thenReturn(getIProvinceStationsTotal("MI"))
         whenever(provinceRepository.findByName("MI"))
@@ -69,6 +71,8 @@ internal class GasStatUpdateServiceTest {
         whenever(gasStatRepository.save(any())).then { i -> i.getArgument<GasStat>(0) }
         service.update()
         verify(gasStatRepository).save(captor.capture())
+        verify(priceStatRepository, times(4)).saveAll(capture(listCaptor))
+        assertEquals(4, listCaptor.firstValue.size)
         assertEquals(date, captor.value.date)
         assertEquals("LE", captor.value.leastStationsMunicipality?.name)
     }

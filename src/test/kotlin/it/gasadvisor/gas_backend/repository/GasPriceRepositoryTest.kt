@@ -1,6 +1,5 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.*
 import it.gasadvisor.gas_backend.model.entities.*
 import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import org.junit.jupiter.api.*
@@ -31,7 +30,7 @@ class GasPriceRepositoryTest @Autowired constructor(
         GasPriceId(
             GasStation(1), true, timeRead,
             "desc"
-        ), 1.87
+        ), 1.8
     )
 
     private val priceTwo = GasPrice(
@@ -40,6 +39,39 @@ class GasPriceRepositoryTest @Autowired constructor(
             "desc"
         ), 2.87
     )
+
+    @Test
+    fun `should find medium price`() {
+        explicitFuelRepository.save(ExplicitFuelType(null, "desc", CommonFuelType.GASOLIO))
+        val stationTwo = GasStation(
+            2, "diego", "", "", "", "",
+            "MI", "LE", 1.1, 1.1, GasStationStatus.ACTIVE
+        )
+        stationRepository.saveAll(listOf(station, stationTwo))
+        val pastOneMonthDate = timeRead.minus(31, ChronoUnit.DAYS)
+        val newerDate = timeRead.plus(2, ChronoUnit.DAYS)
+        val priceOld = GasPrice(2.00, 1, pastOneMonthDate, "desc")
+        val priceNewerTwo = GasPrice(4.00, 1, newerDate, "desc")
+        val priceOldProvince = GasPrice(1.83, 2, pastOneMonthDate, "desc")
+        val priceNewProvince = GasPrice(3.0, 2, timeRead, "desc")
+        val priceNewerProvince = GasPrice(1.0, 2, newerDate, "desc")
+        priceRepository.saveAll(
+            listOf(
+                priceOne, priceOld, priceNewerTwo,
+                priceOldProvince, priceNewProvince, priceNewerProvince
+            )
+        )
+        val avgPrice = priceRepository.findMediumPrice(
+            CommonFuelType.GASOLIO, null,
+            timeRead.minus(30, ChronoUnit.DAYS)
+        )
+        val avgPriceProvince = priceRepository.findMediumPrice(
+            CommonFuelType.GASOLIO, "LE",
+            timeRead.minus(30, ChronoUnit.DAYS)
+        )
+        assertEquals(2.45, avgPrice)
+        assertEquals(2.0, avgPriceProvince)
+    }
 
     @Test
     fun `find price should work with municipality`() {
@@ -87,14 +119,14 @@ class GasPriceRepositoryTest @Autowired constructor(
             GasPriceId(
                 GasStation(1),
                 false, timeRead, "desc"
-            ), 2.87
+            ), 2.2
         )
         priceRepository.saveAll(listOf(priceOne, priceTO, priceMI))
         explicitFuelRepository.save(ExplicitFuelType(null, "desc", CommonFuelType.GASOLIO))
         val result = priceRepository.findPriceStat(CommonFuelType.GASOLIO, "MI", null)
-        assertEquals(2.37, result.getAvg())
-        assertEquals(1.87, result.getMin())
-        assertEquals(2.87, result.getMax())
+        assertEquals(2.0, result.getAvg())
+        assertEquals(1.8, result.getMin())
+        assertEquals(2.2, result.getMax())
     }
 
     @Test

@@ -55,38 +55,42 @@ class GasStatUpdateService @Autowired constructor(
         CommonFuelType.values()
             .forEach {
                 val iPriceStat = gasPriceRepository.findPriceStat(it, null, null)
-                priceStatRepository.save(
-                    PriceStat(
-                        null,
-                        it,
-                        iPriceStat.getAvg(),
-                        PriceStatType.AVG,
-                        gasStat,
-                        null
-                    )
+                val mediumPrice = gasPriceRepository.findMediumPrice(
+                    it, null,
+                    Instant.now().minus(30, ChronoUnit.DAYS)
                 )
-                priceStatRepository.save(
-                    PriceStat(
-                        null,
-                        it,
-                        iPriceStat.getMax(),
-                        PriceStatType.MAX,
-                        gasStat,
-                        null
-                    )
-                )
-                priceStatRepository.save(
-                    PriceStat(
-                        null,
-                        it,
-                        iPriceStat.getMin(),
-                        PriceStatType.MIN,
-                        gasStat,
-                        null
+                priceStatRepository.saveAll(
+                    listOf(
+                        PriceStat(
+                            null,
+                            it,
+                            iPriceStat.getAvg(),
+                            PriceStatType.AVG,
+                            gasStat,
+                            null
+                        ),
+                        PriceStat(
+                            null,
+                            it,
+                            iPriceStat.getMax(),
+                            PriceStatType.MAX,
+                            gasStat,
+                            null
+                        ),
+                        PriceStat(
+                            null,
+                            it,
+                            iPriceStat.getMin(),
+                            PriceStatType.MIN,
+                            gasStat,
+                            null
+                        ),
+                        PriceStat(
+                            null, it, mediumPrice, PriceStatType.MONTHLY_AVG, gasStat, null
+                        )
                     )
                 )
             }
         return emptyList()
     }
-
 }

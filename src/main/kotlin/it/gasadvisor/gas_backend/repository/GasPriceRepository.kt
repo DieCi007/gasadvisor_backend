@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.time.Instant
 
 @Repository
 interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId>, JpaSpecificationExecutor<GasPrice> {
@@ -38,5 +39,16 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId>, JpaSpecifica
         @Param("province") province: String?,
         @Param("municipality") municipality: String?
     ): IPriceStat
+
+    @Query(
+        "select coalesce(avg(gp.price), 0) from GasPrice gp where gp.id.description in " +
+                "(select ft.name from ExplicitFuelType ft where ft.commonType = :fuelType) and " +
+                "gp.id.readDate >= :startDate and gp.id.gasStation.province = coalesce(:province, gp.id.gasStation.province)"
+    )
+    fun findMediumPrice(
+        @Param("fuelType") fuelType: CommonFuelType,
+        @Param("province") province: String?,
+        @Param("startDate") startDate: Instant
+    ): Double
 
 }
