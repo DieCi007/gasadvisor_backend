@@ -1,10 +1,12 @@
 package it.gasadvisor.gas_backend.model.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import java.time.Instant
 import javax.persistence.*
 
 @Entity
 @Table(name = "gas_stat")
+@JsonIgnoreProperties("id")
 data class GasStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

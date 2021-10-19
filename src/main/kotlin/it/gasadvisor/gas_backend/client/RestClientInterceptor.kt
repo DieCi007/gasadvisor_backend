@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.client
 
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.http.HttpRequest
 import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor

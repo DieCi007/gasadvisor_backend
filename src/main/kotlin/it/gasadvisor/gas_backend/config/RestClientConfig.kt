@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.config
 
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.apache.http.conn.ssl.NoopHostnameVerifier
 import org.apache.http.impl.client.HttpClients
 import org.springframework.beans.factory.annotation.Value

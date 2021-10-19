@@ -3,7 +3,7 @@ package it.gasadvisor.gas_backend.job.app_update.service
 import it.gasadvisor.gas_backend.model.entities.Province
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.ProvinceRepository
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

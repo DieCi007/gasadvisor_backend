@@ -4,7 +4,7 @@ import it.gasadvisor.gas_backend.api.gas.explicit_fuel.service.ExplicitFuelServi
 import it.gasadvisor.gas_backend.api.gas.min_price.service.MinPriceService
 import it.gasadvisor.gas_backend.api.gas.price.service.GasPriceService
 import it.gasadvisor.gas_backend.model.entities.*
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import it.gasadvisor.gas_backend.util.TimeUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value

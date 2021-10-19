@@ -23,4 +23,6 @@ interface ProvinceRepository : JpaRepository<Province, Long> {
     )
     fun findOneWithLeastStations(): IProvinceStationsTotal
 
+    @Query("select p.name from Province p")
+    fun findAllNames(): List<String>
 }

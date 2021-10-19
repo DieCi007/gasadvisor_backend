@@ -55,10 +55,6 @@ class GasStatUpdateService @Autowired constructor(
         CommonFuelType.values()
             .forEach {
                 val iPriceStat = gasPriceRepository.findPriceStat(it, null, null)
-                val mediumPrice = gasPriceRepository.findMediumPrice(
-                    it, null,
-                    Instant.now().minus(30, ChronoUnit.DAYS)
-                )
                 priceStatRepository.saveAll(
                     listOf(
                         PriceStat(
@@ -84,9 +80,6 @@ class GasStatUpdateService @Autowired constructor(
                             PriceStatType.MIN,
                             gasStat,
                             null
-                        ),
-                        PriceStat(
-                            null, it, mediumPrice, PriceStatType.MONTHLY_AVG, gasStat, null
                         )
                     )
                 )

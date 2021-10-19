@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.client
 
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpEntity

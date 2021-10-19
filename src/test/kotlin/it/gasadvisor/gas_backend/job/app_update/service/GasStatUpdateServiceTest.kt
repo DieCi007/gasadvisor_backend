@@ -48,8 +48,6 @@ internal class GasStatUpdateServiceTest {
         val municipality = Municipality(1, "LE", province)
         whenever(gasPriceRepository.findPriceStat(any(), any(), any()))
             .thenReturn(getIPriceStat())
-        whenever(gasPriceRepository.findMediumPrice(any(), any(), any()))
-            .thenReturn(2.0)
         whenever(provinceRepository.findOneWithMostStations())
             .thenReturn(getIProvinceStationsTotal("MI"))
         whenever(provinceRepository.findByName("MI"))
@@ -72,7 +70,7 @@ internal class GasStatUpdateServiceTest {
         service.update()
         verify(gasStatRepository).save(captor.capture())
         verify(priceStatRepository, times(4)).saveAll(capture(listCaptor))
-        assertEquals(4, listCaptor.firstValue.size)
+        assertEquals(3, listCaptor.firstValue.size)
         assertEquals(date, captor.value.date)
         assertEquals("LE", captor.value.leastStationsMunicipality?.name)
     }

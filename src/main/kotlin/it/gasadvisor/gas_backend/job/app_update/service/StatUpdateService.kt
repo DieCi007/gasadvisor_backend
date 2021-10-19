@@ -1,6 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.service
 
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 
 abstract class StatUpdateService<T> {
     companion object : Log()

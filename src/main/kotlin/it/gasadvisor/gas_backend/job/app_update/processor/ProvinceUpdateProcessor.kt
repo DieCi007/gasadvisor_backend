@@ -2,7 +2,7 @@ package it.gasadvisor.gas_backend.job.app_update.processor
 
 import it.gasadvisor.gas_backend.job.app_update.service.MunicipalityUpdateService
 import it.gasadvisor.gas_backend.job.app_update.service.ProvinceUpdateService
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component

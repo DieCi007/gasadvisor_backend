@@ -6,7 +6,7 @@ import it.gasadvisor.gas_backend.api.gas.unresolved_station.service.UnresolvedGa
 import it.gasadvisor.gas_backend.model.entities.GasStation
 import it.gasadvisor.gas_backend.model.entities.GasStationStatus
 import it.gasadvisor.gas_backend.model.entities.UnresolvedGasStation
-import it.gasadvisor.gas_backend.util.Log
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service

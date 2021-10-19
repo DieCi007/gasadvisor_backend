@@ -46,11 +46,31 @@ class MunicipalityRepositoryTest @Autowired constructor(
     }
 
     @Test
+    fun `should find municipality with most stations by province`() {
+        gasStationRepository.saveAll(stations)
+        val result = municipalityRepository.findOneWithMostStations("TO")
+        assertEquals("CO", result.getMunicipality())
+        assertEquals("TO", result.getProvince())
+        assertEquals(2, result.getTotal())
+    }
+
+    @Test
     fun `should find municipality with least stations`() {
         gasStationRepository.saveAll(stations)
         val result = municipalityRepository.findOneWithLeastStations()
         assertEquals("MI", result.getMunicipality())
         assertEquals(1, result.getTotal())
+    }
+
+    @Test
+    fun `should find municipality with least stations by province`() {
+        gasStationRepository.saveAll(stations)
+        val first = municipalityRepository.findOneWithLeastStations("MI")
+        val second = municipalityRepository.findOneWithLeastStations("TO")
+        assertEquals("MI", first.getMunicipality())
+        assertEquals("MI", second.getMunicipality())
+        assertEquals(1, first.getTotal())
+        assertEquals(1, second.getTotal())
     }
 
     @BeforeEach

@@ -1,7 +1,5 @@
 package it.gasadvisor.gas_backend.model.entities
 
-import it.gasadvisor.gas_backend.model.entities.PriceStat
-import it.gasadvisor.gas_backend.model.entities.Province
 import java.time.Instant
 import javax.persistence.*
 
@@ -22,7 +20,20 @@ data class ProvinceStat(
     var prices: List<PriceStat> = emptyList(),
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
+    var mostStationsMunicipality: Municipality?,
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = true)
+    var leastStationsMunicipality: Municipality?,
+
+    @ManyToOne(fetch = FetchType.EAGER)
     var province: Province
 ) {
-    constructor(date: Instant, province: Province) : this(null, date, emptyList(), province)
+    constructor(date: Instant, province: Province) : this(null, date, emptyList(), null, null, province)
+    constructor(
+        date: Instant, mostStationsMunicipality: Municipality,
+        leastStationsMunicipality: Municipality, province: Province
+    ) :
+            this(null, date, emptyList(), mostStationsMunicipality, leastStationsMunicipality, province)
 }

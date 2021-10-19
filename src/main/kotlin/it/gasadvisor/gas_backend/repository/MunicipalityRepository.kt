@@ -29,12 +29,30 @@ interface MunicipalityRepository : JpaRepository<Municipality, Long> {
 
     @Query(
         "select gs.municipality as municipality, gs.province as province, count(*) as total from gas_station gs " +
+                "where gs.province = :province " +
+                "group by gs.municipality order by total desc limit 1", nativeQuery = true
+    )
+    fun findOneWithMostStations(@Param("province") province: String): IMunicipalityStationsTotal
+
+    @Query(
+        "select gs.municipality as municipality, gs.province as province, count(*) as total from gas_station gs " +
                 "where gs.municipality in (select gs1.municipality from gas_station gs1 where " +
                 "gs1.province = gs.province) " +
                 "group by gs.municipality, gs.province order by total asc limit 1", nativeQuery = true
     )
     fun findOneWithLeastStations(): IMunicipalityStationsTotal
 
+    @Query(
+        "select gs.municipality as municipality, gs.province as province, count(*) as total from gas_station gs " +
+                "where gs.province = :province " +
+                "group by gs.municipality order by total limit 1", nativeQuery = true
+    )
+    fun findOneWithLeastStations(@Param("province") province: String): IMunicipalityStationsTotal
+
+    @Query("select m.name from Municipality m where m.province.name = :province")
+    fun findNamesByProvince(
+        @Param("province") province: String
+    ): List<String>
 
 }
 
