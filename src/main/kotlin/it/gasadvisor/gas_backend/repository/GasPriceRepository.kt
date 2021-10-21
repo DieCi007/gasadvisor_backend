@@ -4,6 +4,7 @@ import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationPriceRespons
 import it.gasadvisor.gas_backend.model.entities.GasPrice
 import it.gasadvisor.gas_backend.model.entities.GasPriceId
 import it.gasadvisor.gas_backend.model.enums.CommonFuelType
+import it.gasadvisor.gas_backend.repository.contract.IFlagPrice
 import it.gasadvisor.gas_backend.repository.contract.IPriceStat
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -50,5 +51,14 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId>, JpaSpecifica
         @Param("province") province: String?,
         @Param("startDate") startDate: Instant
     ): Double
+
+
+    @Query("select avg(gp.price) as price, gp.id.gasStation.flag as flag from GasPrice gp where " +
+            "gp.id.readDate = (select max(gp1.id.readDate) from GasPrice gp1 where gp1.id.gasStation.id = gp.id.gasStation.id) and " +
+            "gp.id.description in (select ft.name from ExplicitFuelType ft where ft.commonType = :fuelType) " +
+            "group by gp.id.gasStation.flag order by price")
+    fun findAvgPriceForFlags(
+        @Param("fuelType") fuelType: CommonFuelType
+    ): List<IFlagPrice>
 
 }

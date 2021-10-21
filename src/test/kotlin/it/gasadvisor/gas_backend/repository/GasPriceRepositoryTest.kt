@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.TestPropertySource
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import kotlin.math.log
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -202,6 +203,47 @@ class GasPriceRepositoryTest @Autowired constructor(
         val res = priceRepository.findLatestPriceByStationId(station.id)
         assertTrue(res.isNotEmpty())
         assertTrue(res.stream().allMatch { p -> p.price == 5.87 })
+    }
+
+    @Test
+    fun `should find avg price for flags`() {
+        val date = Instant.now()
+        stationRepository.saveAll(listOf(
+            GasStation(1, "mi", "mi", "flag1"),
+            GasStation(2, "mi", "mi", "flag2"),
+            GasStation(3, "mi", "mi", "flag2"),
+            GasStation(4, "mi", "mi", "flag1"),
+            GasStation(5, "mi", "mi", "flag2"),
+        ))
+        priceRepository.saveAll(listOf(
+            GasPrice(1.0, 1, date, "diesel"),
+            GasPrice(2.1, 2, date, "diesel"),
+            GasPrice(1.0, 2, date.plus(1, ChronoUnit.DAYS), "diesel"),
+            GasPrice(3.0, 3, date, "diesel"),
+            GasPrice(4.0, 4, date, "diesel"),
+            GasPrice(5.0, 5, date, "benzi"),
+            GasPrice(6.0, 4, date, "benzi"),
+            GasPrice(7.0, 3, date, "benzi"),
+            GasPrice(9.0, 2, date.plus(1, ChronoUnit.DAYS), "benzi"),
+        ))
+        explicitFuelRepository.saveAll(listOf(
+            ExplicitFuelType("diesel", CommonFuelType.GASOLIO),
+            ExplicitFuelType("benzi", CommonFuelType.BENZINA),
+        ))
+        val avgDiesel = priceRepository.findAvgPriceForFlags(CommonFuelType.GASOLIO)
+        assertEquals(2, avgDiesel.size)
+        assertEquals(2.0, avgDiesel[0].getPrice())
+        assertEquals("flag2", avgDiesel[0].getFlag())
+        assertEquals(2.5, avgDiesel[1].getPrice())
+        assertEquals("flag1", avgDiesel[1].getFlag())
+
+        val avgBenzina = priceRepository.findAvgPriceForFlags(CommonFuelType.BENZINA)
+        assertEquals(2, avgBenzina.size)
+        assertEquals(6.0, avgBenzina[0].getPrice())
+        assertEquals("flag1", avgBenzina[0].getFlag())
+        assertEquals(7.0, avgBenzina[1].getPrice())
+        assertEquals("flag2", avgBenzina[1].getFlag())
+
     }
 
     @BeforeEach

@@ -3,7 +3,9 @@ package it.gasadvisor.gas_backend.repository
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetAllStationsResponse
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationDataResponse
 import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.repository.contract.IMunicipalityNoStations
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityProvince
+import it.gasadvisor.gas_backend.repository.contract.IProvinceNoStations
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
@@ -30,11 +32,41 @@ interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificati
     @Query("select distinct gs.province from GasStation gs")
     fun findAllProvinces(): List<String>
 
-    @Query("select distinct gs.province from GasStation gs where gs.province not in " +
-            "(select p.name from Province p)")
+    @Query(
+        "select distinct gs.province from GasStation gs where gs.province not in " +
+                "(select p.name from Province p)"
+    )
     fun findNotSavedProvinces(): List<String>
 
-    @Query("select distinct gs.municipality as municipality, gs.province as province from GasStation gs where gs.municipality not in " +
-            "(select m.name from Municipality m)")
+    @Query(
+        "select distinct gs.municipality as municipality, gs.province as province from GasStation gs where gs.municipality not in " +
+                "(select m.name from Municipality m)"
+    )
     fun findNotSavedMunicipalities(): List<IMunicipalityProvince>
+
+    @Query(
+        "select gs.province as province, count(*) as total from gas_station gs group by gs.province order by total desc limit 4",
+        nativeQuery = true
+    )
+    fun findProvinceWithMostStations(): List<IProvinceNoStations>
+
+    @Query(
+        "select gs.province as province, count(*) as total from gas_station gs group by gs.province order by total limit 4",
+        nativeQuery = true
+    )
+    fun findProvinceWithLeastStations(): List<IProvinceNoStations>
+
+    @Query(
+        "select gs.province as province, gs.municipality as municipality,  count(*) as total from gas_station gs " +
+                "group by province, municipality order by total desc limit 4",
+        nativeQuery = true
+    )
+    fun findMunicipalityWithMostStations(): List<IMunicipalityNoStations>
+
+    @Query(
+        "select gs.province as province, gs.municipality as municipality, count(*) as total from gas_station gs " +
+                "group by province, municipality order by total limit 4",
+        nativeQuery = true
+    )
+    fun findMunicipalityWithLeastStations(): List<IMunicipalityNoStations>
 }

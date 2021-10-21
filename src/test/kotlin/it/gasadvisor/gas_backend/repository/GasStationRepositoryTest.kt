@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.TestPropertySource
+import java.math.BigInteger
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -100,6 +101,57 @@ class GasStationRepositoryTest @Autowired constructor(
         assertTrue(res.stream().map { mp -> mp.getMunicipality() }
             .allMatch { m -> listOf("CI", "PR").contains(m) })
     }
+
+    @Test
+    fun `should find province with most and least stations`() {
+        repository.saveAll(getStations())
+        val most = repository.findProvinceWithMostStations()
+        assertEquals("MI", most[0].getProvince())
+        assertEquals(4, most[0].getTotal())
+        assertEquals("TO", most[1].getProvince())
+        assertEquals("LE", most[2].getProvince())
+        assertEquals("LC", most[3].getProvince())
+
+        val least = repository.findProvinceWithLeastStations()
+        assertEquals("MI", least[3].getProvince())
+        assertEquals("TO", least[2].getProvince())
+        assertEquals("LE", least[1].getProvince())
+        assertEquals("LC", least[0].getProvince())
+        assertEquals(1, least[0].getTotal())
+    }
+
+    @Test
+    fun `should find municipality with most and least stations`() {
+        repository.saveAll(getStations())
+        val most = repository.findMunicipalityWithMostStations()
+        assertEquals("torino", most[0].getMunicipality())
+        assertEquals(BigInteger.valueOf(3), most[0].getTotal())
+        assertTrue(most.stream().noneMatch { m -> m.getMunicipality() == "lecco" })
+        assertTrue(most.stream().noneMatch { m -> m.getTotal() == BigInteger.valueOf(1) })
+
+        val least = repository.findMunicipalityWithLeastStations()
+        assertEquals(BigInteger.valueOf(1), least[0].getTotal())
+        assertTrue(least.stream().noneMatch { m -> m.getProvince() == "TO" })
+        assertTrue(least.stream().noneMatch { m -> m.getTotal() == BigInteger.valueOf(3) })
+    }
+
+    companion object {
+        fun getStations(): List<GasStation> {
+            return listOf(
+                GasStation(10, "MI", "milano"),
+                GasStation(11, "MI", "torino"),
+                GasStation(12, "MI", "torino"),
+                GasStation(13, "MI", "milano"),
+                GasStation(14, "TO", "torino"),
+                GasStation(15, "TO", "torino"),
+                GasStation(16, "TO", "torino"),
+                GasStation(17, "LE", "lecce"),
+                GasStation(18, "LE", "lecce"),
+                GasStation(19, "LC", "lecco"),
+            )
+        }
+    }
+
 
     @BeforeEach
     fun clear() {

@@ -17,4 +17,5 @@ data class ExplicitFuelType(
     var commonType: CommonFuelType?
 ) {
     constructor(name: String) : this(null, name, null)
+    constructor(name: String, commonType: CommonFuelType) : this(null, name, commonType)
 }

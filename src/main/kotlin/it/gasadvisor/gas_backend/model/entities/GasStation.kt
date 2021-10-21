@@ -47,6 +47,11 @@ class GasStation(
         id, "", "", "", "", "",
         municipality, province, 0.0, 0.0, GasStationStatus.ACTIVE
     )
+
+    constructor(id: Long, province: String, municipality: String, flag: String) : this(
+        id, "", flag, "", "", "",
+        municipality, province, 0.0, 0.0, GasStationStatus.ACTIVE
+    )
 }
 
 enum class GasStationStatus {
