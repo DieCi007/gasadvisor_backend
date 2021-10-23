@@ -36,4 +36,8 @@ data class GasStat(
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
     var leastStationsMunicipality: Municipality?
-)
+) {
+    constructor(date: Instant) : this(
+        null, date, emptyList(), null, null, null, null
+    )
+}

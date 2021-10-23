@@ -68,4 +68,10 @@ class GasStationController @Autowired constructor(
     fun getStationData(@PathVariable("stationId") stationId: Long): GetStationDataResponse {
         return service.getStationData(stationId)
     }
+
+    @GetMapping("/stats/location-stations")
+    @ResponseStatus(HttpStatus.OK)
+    fun getStatsForToday(): LocationNoStations {
+        return service.getLocationNoStations()
+    }
 }

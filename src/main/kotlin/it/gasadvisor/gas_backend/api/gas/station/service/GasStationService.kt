@@ -90,4 +90,19 @@ class GasStationService @Autowired constructor(
         saved.status = station.status
         return GasStationAnalyticsResponse.fromGasStation(repository.save(saved))
     }
+
+    fun getLocationNoStations(): LocationNoStations {
+        val provinceMostStations = repository.findProvinceWithMostStations()
+        val provinceLeastStations = repository.findProvinceWithLeastStations()
+        val municipalityMostStations = repository.findMunicipalityWithMostStations()
+        val municipalityLeastStations = repository.findMunicipalityWithLeastStations()
+
+        return LocationNoStations(
+            provinceMostStations, provinceLeastStations,
+            municipalityMostStations, municipalityLeastStations
+        )
+
+    }
+
+
 }

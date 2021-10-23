@@ -30,6 +30,9 @@ data class PriceStat(
 ) {
     constructor(type: CommonFuelType, price: Double?, priceStatType: PriceStatType) :
             this(null, type, price, priceStatType, null, null)
+
+    constructor(type: CommonFuelType, price: Double?, priceStatType: PriceStatType, gasStat: GasStat) :
+            this(null, type, price, priceStatType, gasStat, null)
 }
 
 

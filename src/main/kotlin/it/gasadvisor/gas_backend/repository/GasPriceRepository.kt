@@ -61,4 +61,5 @@ interface GasPriceRepository : JpaRepository<GasPrice, GasPriceId>, JpaSpecifica
         @Param("fuelType") fuelType: CommonFuelType
     ): List<IFlagPrice>
 
+
 }

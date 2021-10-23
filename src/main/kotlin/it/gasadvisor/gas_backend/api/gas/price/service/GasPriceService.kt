@@ -1,22 +1,29 @@
 package it.gasadvisor.gas_backend.api.gas.price.service
 
+import it.gasadvisor.gas_backend.api.gas.price.contract.FuelTypeFlagPrices
 import it.gasadvisor.gas_backend.api.gas.price.contract.PriceAnalyticsResponse
 import it.gasadvisor.gas_backend.api.gas.station.contract.PaginatedResponse
 import it.gasadvisor.gas_backend.model.entities.GasPrice
 import it.gasadvisor.gas_backend.model.entities.GasPriceId
 import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
+import it.gasadvisor.gas_backend.model.enums.PriceStatType
 import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
+import it.gasadvisor.gas_backend.repository.PriceStatRepository
+import it.gasadvisor.gas_backend.repository.contract.IDatePrice
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import javax.transaction.Transactional
 
 @Service
 class GasPriceService @Autowired constructor(
-    private val repository: GasPriceRepository
+    private val repository: GasPriceRepository,
+    private val priceStatRepo: PriceStatRepository
 ) {
 
     @Transactional
@@ -63,5 +70,26 @@ class GasPriceService @Autowired constructor(
             readDate, description
         )
         repository.deleteById(id)
+    }
+
+    fun getMinMaxPricesForForFlag(): List<FuelTypeFlagPrices> {
+        val fuelTypeFlagPrices: MutableList<FuelTypeFlagPrices> = mutableListOf()
+        CommonFuelType.values().forEach { t ->
+            val avgPrices = repository.findAvgPriceForFlags(t)
+            if (avgPrices.isNotEmpty()) {
+                val cheapest = avgPrices.first()
+                val expensive = avgPrices.last()
+                val fuelPrices = FuelTypeFlagPrices(
+                    t, cheapest, expensive
+                )
+                fuelTypeFlagPrices.add(fuelPrices)
+            }
+        }
+        return fuelTypeFlagPrices
+    }
+
+    fun getPriceTrend(fuelType: CommonFuelType, statType: PriceStatType): List<IDatePrice> {
+        return priceStatRepo.findPriceTrend(Instant.now().minus(30, ChronoUnit.DAYS),
+        fuelType, statType)
     }
 }

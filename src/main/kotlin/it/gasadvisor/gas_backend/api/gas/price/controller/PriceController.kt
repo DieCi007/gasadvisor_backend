@@ -1,9 +1,13 @@
 package it.gasadvisor.gas_backend.api.gas.price.controller
 
+import it.gasadvisor.gas_backend.api.gas.price.contract.FuelTypeFlagPrices
 import it.gasadvisor.gas_backend.api.gas.price.contract.PriceAnalyticsResponse
 import it.gasadvisor.gas_backend.api.gas.price.service.GasPriceService
 import it.gasadvisor.gas_backend.api.gas.station.contract.PaginatedResponse
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
+import it.gasadvisor.gas_backend.model.enums.PriceStatType
 import it.gasadvisor.gas_backend.model.enums.SortType
+import it.gasadvisor.gas_backend.repository.contract.IDatePrice
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -40,4 +44,20 @@ class PriceController @Autowired constructor(
     ) {
         return service.delete(isSelf, readDate, description, price, stationId)
     }
+
+    @GetMapping("/stats/fuel-flag")
+    @ResponseStatus(HttpStatus.OK)
+    fun getStatsForToday(): List<FuelTypeFlagPrices> {
+        return service.getMinMaxPricesForForFlag()
+    }
+
+    @GetMapping("/stats/price-trend")
+    @ResponseStatus(HttpStatus.OK)
+    fun getPriceTrend(
+        @RequestParam("fuelType") fuelType: CommonFuelType,
+        @RequestParam("statType") statType: PriceStatType
+    ): List<IDatePrice> {
+        return service.getPriceTrend(fuelType, statType)
+    }
+
 }
