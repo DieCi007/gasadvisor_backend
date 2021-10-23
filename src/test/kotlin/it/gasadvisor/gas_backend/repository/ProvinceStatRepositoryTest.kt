@@ -38,6 +38,7 @@ class ProvinceStatRepositoryTest @Autowired constructor(
 
     @BeforeEach
     fun reset() {
+        provinceRepo.deleteAllInBatch()
         repo.deleteAllInBatch()
     }
 }

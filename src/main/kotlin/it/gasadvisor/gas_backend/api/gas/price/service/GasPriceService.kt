@@ -13,7 +13,6 @@ import it.gasadvisor.gas_backend.repository.GasStatRepository
 import it.gasadvisor.gas_backend.repository.PriceStatRepository
 import it.gasadvisor.gas_backend.repository.ProvinceStatRepository
 import it.gasadvisor.gas_backend.repository.contract.IDatePrice
-import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -29,7 +28,7 @@ class GasPriceService @Autowired constructor(
     private val gasStatRepo: GasStatRepository,
     private val provinceStatRepo: ProvinceStatRepository
 ) {
-    companion object : Log()
+
     @Transactional
     fun saveAll(prices: List<GasPrice>) {
         repository.saveAll(prices)
@@ -137,7 +136,7 @@ class GasPriceService @Autowired constructor(
 
     private fun getProvinceStat(province: String, date: Instant): AppStatsResponse {
         val provinceStats = provinceStatRepo.findByDateAndProvinceName(date, province)
-        if (province.isEmpty()) {
+        if (provinceStats.isEmpty()) {
             return AppStatsResponse(null, null, null, null, emptyList())
         }
         val provinceStat = provinceStats[0]
