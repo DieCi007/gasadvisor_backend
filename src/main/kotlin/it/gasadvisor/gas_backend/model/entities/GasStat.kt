@@ -7,19 +7,13 @@ import javax.persistence.*
 @Entity
 @Table(name = "gas_stat")
 @JsonIgnoreProperties("id")
-data class GasStat(
+class GasStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     var date: Instant,
-
-    @OneToMany(
-        fetch = FetchType.EAGER, cascade = [CascadeType.ALL],
-        mappedBy = "gasStat"
-    )
-    var prices: List<PriceStat>,
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
@@ -35,9 +29,21 @@ data class GasStat(
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = true)
-    var leastStationsMunicipality: Municipality?
-) {
-    constructor(date: Instant) : this(
-        null, date, emptyList(), null, null, null, null
+    var leastStationsMunicipality: Municipality?,
+
+    @OneToMany(
+        fetch = FetchType.EAGER,
+        mappedBy = "gasStat", targetEntity = PriceStat::class
     )
+    var prices: List<PriceStat>
+) {
+
+    constructor(date: Instant) : this(
+        null, date, null, null, null, null,
+        emptyList()
+    )
+
+    override fun toString(): String {
+        return "$id $date ${prices.map { it.toString() }}"
+    }
 }

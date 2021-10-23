@@ -12,7 +12,7 @@ class Privilege(
     @Column(nullable = false)
     var description: String?,
 
-    @ManyToMany(mappedBy = "privileges")
+    @ManyToMany(mappedBy = "privileges", targetEntity = Role::class)
     var roles: Set<Role> = emptySet()
 )
 

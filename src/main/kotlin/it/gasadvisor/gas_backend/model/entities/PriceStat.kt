@@ -6,33 +6,38 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "price_stat")
-data class PriceStat(
+class PriceStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private var id: Long?,
+    var id: Long?,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private var fuelType: CommonFuelType,
+    var fuelType: CommonFuelType,
 
     @Column(nullable = true)
-    private var price: Double?,
+    var price: Double?,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private var priceStatType: PriceStatType,
+    var priceStatType: PriceStatType,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private var gasStat: GasStat?,
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = GasStat::class)
+    @JoinColumn(name = "gas_stat_id", referencedColumnName = "id")
+    var gasStat: GasStat?,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private var provinceStat: ProvinceStat?
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = ProvinceStat::class)
+    var provinceStat: ProvinceStat?
 ) {
     constructor(type: CommonFuelType, price: Double?, priceStatType: PriceStatType) :
             this(null, type, price, priceStatType, null, null)
 
     constructor(type: CommonFuelType, price: Double?, priceStatType: PriceStatType, gasStat: GasStat) :
             this(null, type, price, priceStatType, gasStat, null)
+
+    override fun toString(): String {
+        return "$id $fuelType $priceStatType"
+    }
 }
 
 

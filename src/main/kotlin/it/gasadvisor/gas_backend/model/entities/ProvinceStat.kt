@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "province_stat")
-data class ProvinceStat(
+class ProvinceStat(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private var id: Long?,
@@ -15,7 +15,7 @@ data class ProvinceStat(
 
     @OneToMany(
         fetch = FetchType.EAGER, cascade = [CascadeType.ALL],
-        mappedBy = "provinceStat"
+        mappedBy = "provinceStat", targetEntity = PriceStat::class
     )
     var prices: List<PriceStat> = emptyList(),
 

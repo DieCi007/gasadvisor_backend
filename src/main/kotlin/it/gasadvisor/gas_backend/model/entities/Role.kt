@@ -9,7 +9,7 @@ class Role(
     @Column(length = 48)
     var name: RoleName,
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, targetEntity = Privilege::class)
     @JoinTable(
         name = "role_has_privilege",
         joinColumns = [JoinColumn(name = "role_id", nullable = false)],
@@ -17,7 +17,7 @@ class Role(
     )
     var privileges: Set<Privilege> = emptySet(),
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role", targetEntity = User::class)
     var users: Set<User> = emptySet()
 )
 

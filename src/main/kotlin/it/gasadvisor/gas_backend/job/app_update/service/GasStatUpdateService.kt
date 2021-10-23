@@ -47,9 +47,9 @@ class GasStatUpdateService @Autowired constructor(
                 iMunicipalityLeastStations.getProvince()
             ).orElse(null)
         var gasStat = GasStat(
-            null, date, emptyList(), provinceMostStations,
+            null, date, provinceMostStations,
             municipalityMostStations, provinceLeastStation,
-            municipalityLeastStation
+            municipalityLeastStation, emptyList()
         )
         gasStat = save(gasStat)
         CommonFuelType.values()

@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.price.controller
 
+import it.gasadvisor.gas_backend.api.gas.price.contract.AppStatsResponse
 import it.gasadvisor.gas_backend.api.gas.price.contract.FuelTypeFlagPrices
 import it.gasadvisor.gas_backend.api.gas.price.contract.PriceAnalyticsResponse
 import it.gasadvisor.gas_backend.api.gas.price.service.GasPriceService
@@ -60,4 +61,12 @@ class PriceController @Autowired constructor(
         return service.getPriceTrend(fuelType, statType)
     }
 
+    @GetMapping("/stats")
+    @ResponseStatus(HttpStatus.OK)
+    fun getAppStats(
+        @RequestParam(value = "province", required = false) province: String?,
+        @RequestParam(value = "date") date: Instant,
+    ): AppStatsResponse {
+        return service.getAppStats(province, date)
+    }
 }

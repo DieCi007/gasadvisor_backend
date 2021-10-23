@@ -12,9 +12,11 @@ class Province(
     @Column(nullable = false, unique = true)
     var name: String,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "province")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "province", targetEntity = Municipality::class)
     var municipalities: Set<Municipality>? = emptySet(),
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "province")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "province", targetEntity = ProvinceStat::class)
     var stats: List<ProvinceStat>? = emptyList()
-)
+) {
+    constructor(name: String) : this(null, name)
+}

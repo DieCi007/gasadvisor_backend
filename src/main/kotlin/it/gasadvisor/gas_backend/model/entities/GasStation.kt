@@ -24,7 +24,7 @@ class GasStation(
     @Enumerated(EnumType.STRING)
     var status: GasStationStatus,
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id.gasStation")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id.gasStation", targetEntity = GasPrice::class)
     @JsonIgnoreProperties(value = ["gasStation"], allowSetters = true)
     var prices: Set<GasPrice> = emptySet(),
 

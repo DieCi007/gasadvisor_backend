@@ -80,3 +80,7 @@ tasks {
         }
     }
 }
+
+allOpen {
+    annotation("javax.persistence.Entity")
+}

@@ -1,7 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.price.service
 
-import it.gasadvisor.gas_backend.api.gas.price.contract.FuelTypeFlagPrices
-import it.gasadvisor.gas_backend.api.gas.price.contract.PriceAnalyticsResponse
+import it.gasadvisor.gas_backend.api.gas.price.contract.*
 import it.gasadvisor.gas_backend.api.gas.station.contract.PaginatedResponse
 import it.gasadvisor.gas_backend.model.entities.GasPrice
 import it.gasadvisor.gas_backend.model.entities.GasPriceId
@@ -10,8 +9,11 @@ import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.model.enums.PriceStatType
 import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
+import it.gasadvisor.gas_backend.repository.GasStatRepository
 import it.gasadvisor.gas_backend.repository.PriceStatRepository
+import it.gasadvisor.gas_backend.repository.ProvinceStatRepository
 import it.gasadvisor.gas_backend.repository.contract.IDatePrice
+import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -23,9 +25,11 @@ import javax.transaction.Transactional
 @Service
 class GasPriceService @Autowired constructor(
     private val repository: GasPriceRepository,
-    private val priceStatRepo: PriceStatRepository
+    private val priceStatRepo: PriceStatRepository,
+    private val gasStatRepo: GasStatRepository,
+    private val provinceStatRepo: ProvinceStatRepository
 ) {
-
+    companion object : Log()
     @Transactional
     fun saveAll(prices: List<GasPrice>) {
         repository.saveAll(prices)
@@ -89,7 +93,68 @@ class GasPriceService @Autowired constructor(
     }
 
     fun getPriceTrend(fuelType: CommonFuelType, statType: PriceStatType): List<IDatePrice> {
-        return priceStatRepo.findPriceTrend(Instant.now().minus(30, ChronoUnit.DAYS),
-        fuelType, statType)
+        return priceStatRepo.findPriceTrend(
+            Instant.now().minus(30, ChronoUnit.DAYS),
+            fuelType, statType
+        )
     }
+
+    @Transactional
+    fun getAppStats(province: String?, date: Instant): AppStatsResponse {
+        val dateTruncated = date.truncatedTo(ChronoUnit.DAYS)
+        return if (province != null) {
+            getProvinceStat(province, dateTruncated)
+        } else {
+            getGasStat(dateTruncated)
+        }
+    }
+
+    private fun getGasStat(date: Instant): AppStatsResponse {
+        val gasStatOpt = gasStatRepo.findByDate(date)
+        if (gasStatOpt.isEmpty) {
+            return AppStatsResponse(null, null, null, null, emptyList())
+        }
+        val gasStat = gasStatOpt.get()
+
+        val mostStationsMunicipality = MunicipalityProvince(
+            gasStat.mostStationsMunicipality?.name,
+            gasStat.mostStationsMunicipality?.province?.name
+        )
+        val leastStationsMunicipality = MunicipalityProvince(
+            gasStat.leastStationsMunicipality?.name,
+            gasStat.leastStationsMunicipality?.province?.name
+        )
+        val mostStationsProvince = gasStat.mostStationsProvince?.name
+        val leastStationsProvince = gasStat.leastStationsProvince?.name
+
+        val priceStats = gasStat.prices.map { PriceStatResponse(it.fuelType, it.price ?: 0.0, it.priceStatType) }
+
+        return AppStatsResponse(
+            mostStationsMunicipality, mostStationsProvince,
+            leastStationsMunicipality, leastStationsProvince, priceStats
+        )
+    }
+
+    private fun getProvinceStat(province: String, date: Instant): AppStatsResponse {
+        val provinceStats = provinceStatRepo.findByDateAndProvinceName(date, province)
+        if (province.isEmpty()) {
+            return AppStatsResponse(null, null, null, null, emptyList())
+        }
+        val provinceStat = provinceStats[0]
+        val mostStationsMunicipality = MunicipalityProvince(
+            provinceStat.mostStationsMunicipality?.name,
+            provinceStat.mostStationsMunicipality?.province?.name
+        )
+        val leastStationsMunicipality = MunicipalityProvince(
+            provinceStat.leastStationsMunicipality?.name,
+            provinceStat.leastStationsMunicipality?.province?.name
+        )
+        val prices = provinceStat.prices.map { PriceStatResponse(it.fuelType, it.price ?: 0.0, it.priceStatType) }
+        return AppStatsResponse(
+            mostStationsMunicipality, null, leastStationsMunicipality,
+            null, prices
+        )
+    }
+
+
 }
