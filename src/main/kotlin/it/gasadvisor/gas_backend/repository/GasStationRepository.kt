@@ -5,6 +5,7 @@ import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationDataResponse
 import it.gasadvisor.gas_backend.model.entities.GasStation
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityNoStations
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityProvince
+import it.gasadvisor.gas_backend.repository.contract.INearestStation
 import it.gasadvisor.gas_backend.repository.contract.IProvinceNoStations
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
+import javax.naming.LimitExceededException
 
 @Repository
 interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificationExecutor<GasStation> {
@@ -69,4 +71,16 @@ interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificati
         nativeQuery = true
     )
     fun findMunicipalityWithLeastStations(): List<IMunicipalityNoStations>
+
+    @Query(
+        "select gs.address as address, gs.flag as flag, gs.owner as owner, " +
+                "st_distance_sphere(point(gs.latitude, gs.longitude), point(:lat, :lon)) " +
+                "as distance from gas_station gs where gs.status = 'ACTIVE' order by distance limit :limit",
+        nativeQuery = true
+    )
+    fun findNearestStations(
+        @Param("lat") lat: Double,
+        @Param("lon") lon: Double,
+        @Param("limit") limit: Int
+    ): List<INearestStation>
 }

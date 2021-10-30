@@ -9,6 +9,7 @@ import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.GasStationRepository
 import it.gasadvisor.gas_backend.repository.ModifiedGasStationRepository
+import it.gasadvisor.gas_backend.repository.contract.INearestStation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -104,5 +105,7 @@ class GasStationService @Autowired constructor(
 
     }
 
-
+    fun findNearestStations(lat: Double, lon: Double, size: Int?): List<INearestStation> {
+        return repository.findNearestStations(lat, lon, size ?: 10)
+    }
 }

@@ -4,6 +4,7 @@ import it.gasadvisor.gas_backend.api.gas.station.contract.*
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
 import it.gasadvisor.gas_backend.model.entities.GasStation
 import it.gasadvisor.gas_backend.model.enums.SortType
+import it.gasadvisor.gas_backend.repository.contract.INearestStation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -73,5 +74,15 @@ class GasStationController @Autowired constructor(
     @ResponseStatus(HttpStatus.OK)
     fun getStatsForToday(): LocationNoStations {
         return service.getLocationNoStations()
+    }
+
+    @GetMapping("/nearest")
+    @ResponseStatus(HttpStatus.OK)
+    fun getNearest(
+        @RequestParam("latitude") latitude: Double,
+        @RequestParam("longitude") longitude: Double,
+        @RequestParam(value = "size", required = false) size: Int?
+    ): List<INearestStation> {
+        return service.findNearestStations(latitude, longitude, size)
     }
 }

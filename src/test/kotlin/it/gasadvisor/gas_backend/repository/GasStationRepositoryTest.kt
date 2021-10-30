@@ -135,6 +135,29 @@ class GasStationRepositoryTest @Autowired constructor(
         assertTrue(least.stream().noneMatch { m -> m.getTotal() == BigInteger.valueOf(3) })
     }
 
+    @Test
+    fun `should find nearest stations`() {
+        val stations = listOf(
+            getStation(3, "joan", 45.485071, 9.245969),
+            getStation(1, "mario", 45.440875, 9.141119),
+            getStation(2, "diego", 45.430629, 9.116481),
+            getStation(4, "andrea", 45.453014, 9.179598),
+        )
+        this.repository.saveAll(stations)
+
+        val response = repository.findNearestStations(45.429435, 9.114759)
+        assertEquals(4, response.size)
+        assertEquals("diego", response[0].getOwner())
+        assertEquals("mario", response[1].getOwner())
+        assertEquals("andrea", response[2].getOwner())
+        assertEquals("joan", response[3].getOwner())
+        assertTrue(
+            response[0].getDistance() < response[1].getDistance() &&
+                    response[1].getDistance() < response[2].getDistance() &&
+                    response[2].getDistance() < response[3].getDistance()
+        )
+    }
+
     companion object {
         fun getStations(): List<GasStation> {
             return listOf(
@@ -148,6 +171,12 @@ class GasStationRepositoryTest @Autowired constructor(
                 GasStation(17, "LE", "lecce"),
                 GasStation(18, "LE", "lecce"),
                 GasStation(19, "LC", "lecco"),
+            )
+        }
+
+        fun getStation(id: Long, owner: String, lat: Double, lon: Double): GasStation {
+            return GasStation(
+                id, owner, "", "", "", "", "", "", lat, lon, GasStationStatus.ACTIVE
             )
         }
     }
