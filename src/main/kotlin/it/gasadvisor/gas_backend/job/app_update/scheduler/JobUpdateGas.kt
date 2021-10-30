@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.scheduler
 
+import it.gasadvisor.gas_backend.job.app_update.AppUpdateObserver
 import it.gasadvisor.gas_backend.job.app_update.processor.*
 import it.gasadvisor.gas_backend.util.logging.Log
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +16,8 @@ class JobUpdateGas @Autowired constructor(
     @Qualifier("explicitFuelUpdateProcessor") private val explicitFuelUpdateProcessor: ExplicitFuelUpdateProcessor,
     @Qualifier("gasStatUpdateProcessor") private val gasStatUpdateProcessor: GasStatUpdateProcessor,
     @Qualifier("provinceStatUpdateProcessor") private val provinceStatUpdateProcessor: ProvinceStatUpdateProcessor,
-    @Qualifier("modifiedGasStationUpdateProcessor") private val modifiedGasStationUpdateProcessor: ModifiedGasStationUpdateProcessor
+    @Qualifier("modifiedGasStationUpdateProcessor") private val modifiedGasStationUpdateProcessor: ModifiedGasStationUpdateProcessor,
+    private val observer: AppUpdateObserver
 ) {
     companion object : Log()
 
@@ -35,6 +37,7 @@ class JobUpdateGas @Autowired constructor(
         gasStatUpdateProcessor.update()
         log.info("Starting province stat update")
         provinceStatUpdateProcessor.update()
+        observer.notifyAppUpdate()
     }
 
 }

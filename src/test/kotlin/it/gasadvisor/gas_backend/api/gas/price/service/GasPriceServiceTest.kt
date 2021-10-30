@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.api.gas.price.service
 
+import it.gasadvisor.gas_backend.job.app_update.AppUpdateObserver
 import it.gasadvisor.gas_backend.model.entities.*
 import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.model.enums.PriceStatType
@@ -32,6 +33,9 @@ internal class GasPriceServiceTest {
 
     @Mock
     lateinit var provinceStatRepo: ProvinceStatRepository
+
+    @Mock
+    lateinit var observer: AppUpdateObserver
 
     @InjectMocks
     lateinit var service: GasPriceService

@@ -49,7 +49,7 @@ class PriceController @Autowired constructor(
     @GetMapping("/stats/fuel-flag")
     @ResponseStatus(HttpStatus.OK)
     fun getStatsForToday(): List<FuelTypeFlagPrices> {
-        return service.getMinMaxPricesForForFlag()
+        return service.priceStatsForFlag
     }
 
     @GetMapping("/stats/price-trend")

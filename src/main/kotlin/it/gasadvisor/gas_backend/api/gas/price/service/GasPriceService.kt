@@ -2,6 +2,8 @@ package it.gasadvisor.gas_backend.api.gas.price.service
 
 import it.gasadvisor.gas_backend.api.gas.price.contract.*
 import it.gasadvisor.gas_backend.api.gas.station.contract.PaginatedResponse
+import it.gasadvisor.gas_backend.job.app_update.AppUpdateObserver
+import it.gasadvisor.gas_backend.job.app_update.AppUpdateSubscriber
 import it.gasadvisor.gas_backend.model.entities.GasPrice
 import it.gasadvisor.gas_backend.model.entities.GasPriceId
 import it.gasadvisor.gas_backend.model.entities.GasStation
@@ -19,6 +21,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 @Service
@@ -26,8 +29,17 @@ class GasPriceService @Autowired constructor(
     private val repository: GasPriceRepository,
     private val priceStatRepo: PriceStatRepository,
     private val gasStatRepo: GasStatRepository,
-    private val provinceStatRepo: ProvinceStatRepository
-) {
+    private val provinceStatRepo: ProvinceStatRepository,
+    private val observer: AppUpdateObserver
+) : AppUpdateSubscriber {
+
+    lateinit var priceStatsForFlag: List<FuelTypeFlagPrices>
+
+    @PostConstruct
+    fun registerSubscriber() {
+        observer.register(this)
+        priceStatsForFlag = getMinMaxPricesForFlag()
+    }
 
     @Transactional
     fun saveAll(prices: List<GasPrice>) {
@@ -75,7 +87,7 @@ class GasPriceService @Autowired constructor(
         repository.deleteById(id)
     }
 
-    fun getMinMaxPricesForForFlag(): List<FuelTypeFlagPrices> {
+    fun getMinMaxPricesForFlag(): List<FuelTypeFlagPrices> {
         val fuelTypeFlagPrices: MutableList<FuelTypeFlagPrices> = mutableListOf()
         CommonFuelType.values().forEach { t ->
             val avgPrices = repository.findAvgPriceForFlags(t)
@@ -153,6 +165,10 @@ class GasPriceService @Autowired constructor(
             mostStationsMunicipality, null, leastStationsMunicipality,
             null, prices
         )
+    }
+
+    override fun onAppUpdate() {
+        priceStatsForFlag = getMinMaxPricesForFlag()
     }
 
 

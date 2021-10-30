@@ -1,5 +1,6 @@
 package it.gasadvisor.gas_backend.job.app_update.scheduler
 
+import it.gasadvisor.gas_backend.job.app_update.AppUpdateObserver
 import it.gasadvisor.gas_backend.job.app_update.processor.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -31,6 +32,9 @@ internal class JobUpdateGasTest {
     @Mock
     lateinit var modifiedStationProcessor: ModifiedGasStationUpdateProcessor
 
+    @Mock
+    lateinit var observer: AppUpdateObserver
+
     @InjectMocks
     lateinit var jobUpdateGasTest: JobUpdateGas
 
@@ -44,6 +48,7 @@ internal class JobUpdateGasTest {
         verify(gasStatUpdateProcessor).update()
         verify(provinceStatUpdateProcessor).update()
         verify(modifiedStationProcessor).update()
+        verify(observer).notifyAppUpdate()
     }
 
 }
