@@ -3,6 +3,7 @@ package it.gasadvisor.gas_backend.api.gas.station.controller
 import it.gasadvisor.gas_backend.api.gas.station.contract.*
 import it.gasadvisor.gas_backend.api.gas.station.service.GasStationService
 import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.contract.INearestStation
 import org.springframework.beans.factory.annotation.Autowired
@@ -85,4 +86,18 @@ class GasStationController @Autowired constructor(
     ): List<INearestStation> {
         return service.findNearestStations(latitude, longitude, size)
     }
+
+    @GetMapping("/filter")
+    @ResponseStatus(HttpStatus.OK)
+    fun filter(
+        @RequestParam(value = "province", required = false) province: String?,
+        @RequestParam(value = "municipality", required = false) municipality: String?,
+        @RequestParam(value = "fuel", required = false) fuel: CommonFuelType?,
+        @RequestParam(value = "distance", required = false) distance: Long?,
+        @RequestParam(value = "latitude", required = false) lat: Double?,
+        @RequestParam(value = "longitude", required = false) lon: Double?
+    ): List<IGetAllStationsResponse> {
+        return service.filter(province, municipality, fuel, distance, lat, lon)
+    }
+
 }

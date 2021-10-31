@@ -5,6 +5,7 @@ import it.gasadvisor.gas_backend.exception.BadRequestException
 import it.gasadvisor.gas_backend.exception.NotFoundException
 import it.gasadvisor.gas_backend.model.entities.GasStation
 import it.gasadvisor.gas_backend.model.entities.ModifiedGasStation
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.model.enums.SortType
 import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import it.gasadvisor.gas_backend.repository.GasStationRepository
@@ -13,8 +14,10 @@ import it.gasadvisor.gas_backend.repository.contract.INearestStation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.stream.Stream
 
 @Service
 class GasStationService @Autowired constructor(
@@ -107,5 +110,15 @@ class GasStationService @Autowired constructor(
 
     fun findNearestStations(lat: Double, lon: Double, size: Int?): List<INearestStation> {
         return repository.findNearestStations(lat, lon, size ?: 10)
+    }
+
+    fun filter(
+        province: String?, municipality: String?, fuel: CommonFuelType?, distance: Long?,
+        lat: Double?, lon: Double?
+    ): List<IGetAllStationsResponse> {
+        if (!Stream.of(province, municipality, fuel, distance, lat, lon).anyMatch { it != null }) {
+            throw BadRequestException("Apply at least one filter to continue")
+        }
+        return repository.filter(province, municipality, fuel, distance, lat, lon)
     }
 }

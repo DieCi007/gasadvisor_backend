@@ -1,9 +1,7 @@
 package it.gasadvisor.gas_backend.repository
 
-import it.gasadvisor.gas_backend.model.entities.GasStation
-import it.gasadvisor.gas_backend.model.entities.GasStationStatus
-import it.gasadvisor.gas_backend.model.entities.Municipality
-import it.gasadvisor.gas_backend.model.entities.Province
+import it.gasadvisor.gas_backend.model.entities.*
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -13,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.TestPropertySource
 import java.math.BigInteger
+import java.time.Instant
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -20,7 +19,9 @@ import java.math.BigInteger
 class GasStationRepositoryTest @Autowired constructor(
     val repository: GasStationRepository,
     val provinceRepository: ProvinceRepository,
-    val municipalityRepository: MunicipalityRepository
+    val municipalityRepository: MunicipalityRepository,
+    val priceRepo: GasPriceRepository,
+    val fuelRepo: ExplicitFuelRepository
 ) {
     private val stationOne = GasStation(
         1, "diego", "", "", "",
@@ -145,7 +146,7 @@ class GasStationRepositoryTest @Autowired constructor(
         )
         this.repository.saveAll(stations)
 
-        val response = repository.findNearestStations(45.429435, 9.114759)
+        val response = repository.findNearestStations(45.429435, 9.114759, 10)
         assertEquals(4, response.size)
         assertEquals("diego", response[0].getOwner())
         assertEquals("mario", response[1].getOwner())
@@ -156,6 +157,43 @@ class GasStationRepositoryTest @Autowired constructor(
                     response[1].getDistance() < response[2].getDistance() &&
                     response[2].getDistance() < response[3].getDistance()
         )
+    }
+
+    @Test
+    fun `should filter correctly by province municipality fuelType`() {
+        repository.saveAll(getStations())
+        fuelRepo.saveAll(
+            listOf(
+                ExplicitFuelType("olio", CommonFuelType.GASOLIO),
+                ExplicitFuelType("benzi", CommonFuelType.BENZINA),
+            )
+        )
+        priceRepo.saveAll(
+            listOf(
+                GasPrice(1.1, 10, Instant.now(), "olio"),
+                GasPrice(2.1, 11, Instant.now(), "olio"),
+                GasPrice(3.1, 12, Instant.now(), "olio"),
+                GasPrice(4.1, 13, Instant.now(), "benzi"),
+                GasPrice(5.1, 14, Instant.now(), "benzi"),
+                GasPrice(6.1, 15, Instant.now(), "benzi"),
+            )
+        )
+
+        val byProvince = repository.filter(
+            "MI", null, null,
+            null, null, null
+        )
+        assertEquals(4, byProvince.size)
+        val byProvinceAndMunicipality = repository.filter(
+            "MI", "milano",
+            null, null, null, null
+        )
+        assertEquals(2, byProvinceAndMunicipality.size)
+        val byProvinceMunicipalityAndFuel = repository.filter(
+            "TO", "torino",
+            CommonFuelType.BENZINA, null, null, null
+        )
+        assertEquals(1, byProvinceMunicipalityAndFuel.size)
     }
 
     companion object {
@@ -185,6 +223,8 @@ class GasStationRepositoryTest @Autowired constructor(
     @BeforeEach
     fun clear() {
         repository.deleteAllInBatch()
+        priceRepo.deleteAllInBatch()
+        fuelRepo.deleteAllInBatch()
         municipalityRepository.deleteAllInBatch()
         provinceRepository.deleteAllInBatch()
     }

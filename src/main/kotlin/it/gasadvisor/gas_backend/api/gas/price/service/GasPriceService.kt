@@ -33,12 +33,11 @@ class GasPriceService @Autowired constructor(
     private val observer: AppUpdateObserver
 ) : AppUpdateSubscriber {
 
-    lateinit var priceStatsForFlag: List<FuelTypeFlagPrices>
+    var priceStatsForFlag: List<FuelTypeFlagPrices>? = null
 
     @PostConstruct
     fun registerSubscriber() {
         observer.register(this)
-        priceStatsForFlag = getMinMaxPricesForFlag()
     }
 
     @Transactional
@@ -88,19 +87,22 @@ class GasPriceService @Autowired constructor(
     }
 
     fun getMinMaxPricesForFlag(): List<FuelTypeFlagPrices> {
-        val fuelTypeFlagPrices: MutableList<FuelTypeFlagPrices> = mutableListOf()
-        CommonFuelType.values().forEach { t ->
-            val avgPrices = repository.findAvgPriceForFlags(t)
-            if (avgPrices.isNotEmpty()) {
-                val cheapest = avgPrices.first()
-                val expensive = avgPrices.last()
-                val fuelPrices = FuelTypeFlagPrices(
-                    t, cheapest, expensive
-                )
-                fuelTypeFlagPrices.add(fuelPrices)
+        if (priceStatsForFlag == null) {
+            val fuelTypeFlagPrices: MutableList<FuelTypeFlagPrices> = mutableListOf()
+            CommonFuelType.values().forEach { t ->
+                val avgPrices = repository.findAvgPriceForFlags(t)
+                if (avgPrices.isNotEmpty()) {
+                    val cheapest = avgPrices.first()
+                    val expensive = avgPrices.last()
+                    val fuelPrices = FuelTypeFlagPrices(
+                        t, cheapest, expensive
+                    )
+                    fuelTypeFlagPrices.add(fuelPrices)
+                }
             }
+            priceStatsForFlag = fuelTypeFlagPrices
         }
-        return fuelTypeFlagPrices
+        return priceStatsForFlag as List<FuelTypeFlagPrices>
     }
 
     fun getPriceTrend(fuelType: CommonFuelType, statType: PriceStatType): List<IDatePrice> {

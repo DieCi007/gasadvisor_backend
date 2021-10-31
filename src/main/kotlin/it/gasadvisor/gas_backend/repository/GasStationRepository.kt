@@ -2,7 +2,9 @@ package it.gasadvisor.gas_backend.repository
 
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetAllStationsResponse
 import it.gasadvisor.gas_backend.api.gas.station.contract.GetStationDataResponse
+import it.gasadvisor.gas_backend.api.gas.station.contract.IGetAllStationsResponse
 import it.gasadvisor.gas_backend.model.entities.GasStation
+import it.gasadvisor.gas_backend.model.enums.CommonFuelType
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityNoStations
 import it.gasadvisor.gas_backend.repository.contract.IMunicipalityProvince
 import it.gasadvisor.gas_backend.repository.contract.INearestStation
@@ -13,7 +15,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
-import javax.naming.LimitExceededException
 
 @Repository
 interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificationExecutor<GasStation> {
@@ -83,4 +84,24 @@ interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificati
         @Param("lon") lon: Double,
         @Param("limit") limit: Int
     ): List<INearestStation>
+
+    @Query(
+        "select distinct gs.id as id, gs.latitude as latitude, gs.longitude as longitude from gas_price gp, gas_station gs where " +
+                "gp.gas_station_id = gs.id and " +
+                "gp.read_date = (select max(p.read_date) from gas_price p where p.gas_station_id = gp.gas_station_id) and " +
+                "(:province is null or gs.province = :province) and " +
+                "((:province is null or :municipality is null) or gs.municipality = :municipality) and " +
+                "(:fuel is null or gp.description in (select c.name from explicit_fuel_type  c where c.common_type = :fuel)) and " +
+                "((:distance is null or :lat is null or :lon is null) or " +
+                "st_distance_sphere(point(gs.latitude, gs.longitude), point(:lat, :lon)) <= :distance)",
+        nativeQuery = true
+    )
+    fun filter(
+        @Param("province") province: String?,
+        @Param("municipality") municipality: String?,
+        @Param("fuel") fuel: CommonFuelType?,
+        @Param("distance") distanceMeters: Long?,
+        @Param("lat") lat: Double?,
+        @Param("lon") lon: Double?,
+    ): List<IGetAllStationsResponse>
 }
