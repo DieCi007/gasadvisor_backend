@@ -74,7 +74,7 @@ interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificati
     fun findMunicipalityWithLeastStations(): List<IMunicipalityNoStations>
 
     @Query(
-        "select gs.address as address, gs.flag as flag, gs.owner as owner, " +
+        "select gs.address as address, gs.flag as flag, gs.owner as owner, gs.id as id, gs.latitude as latitude, gs.longitude as longitude, " +
                 "st_distance_sphere(point(gs.latitude, gs.longitude), point(:lat, :lon)) " +
                 "as distance from gas_station gs where gs.status = 'ACTIVE' order by distance limit :limit",
         nativeQuery = true
@@ -91,7 +91,7 @@ interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificati
                 "gp.read_date = (select max(p.read_date) from gas_price p where p.gas_station_id = gp.gas_station_id) and " +
                 "(:province is null or gs.province = :province) and " +
                 "((:province is null or :municipality is null) or gs.municipality = :municipality) and " +
-                "(:fuel is null or gp.description in (select c.name from explicit_fuel_type  c where c.common_type = :fuel)) and " +
+                "(:fuel is null or gp.description in (select c.name from explicit_fuel_type  c where c.common_type = :#{#fuel?.name()})) and " +
                 "((:distance is null or :lat is null or :lon is null) or " +
                 "st_distance_sphere(point(gs.latitude, gs.longitude), point(:lat, :lon)) <= :distance)",
         nativeQuery = true
@@ -104,4 +104,5 @@ interface GasStationRepository : JpaRepository<GasStation, Long>, JpaSpecificati
         @Param("lat") lat: Double?,
         @Param("lon") lon: Double?,
     ): List<IGetAllStationsResponse>
+
 }

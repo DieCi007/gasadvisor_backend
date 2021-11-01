@@ -12,7 +12,6 @@ class MunicipalityController @Autowired constructor(
     private val service: MunicipalityService
 ) {
     @GetMapping
-    @PreAuthorize("hasAuthority(\"READ_ALL\")")
     @ResponseStatus(HttpStatus.OK)
     fun getAllFromProvince(
         @RequestParam("province") province: String

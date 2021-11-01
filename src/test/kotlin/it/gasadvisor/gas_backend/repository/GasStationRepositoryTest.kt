@@ -190,7 +190,7 @@ class GasStationRepositoryTest @Autowired constructor(
         )
         assertEquals(2, byProvinceAndMunicipality.size)
         val byProvinceMunicipalityAndFuel = repository.filter(
-            "TO", "torino",
+            "MI", "milano",
             CommonFuelType.BENZINA, null, null, null
         )
         assertEquals(1, byProvinceMunicipalityAndFuel.size)

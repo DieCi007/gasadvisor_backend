@@ -77,7 +77,7 @@ class GasStationController @Autowired constructor(
         return service.getLocationNoStations()
     }
 
-    @GetMapping("/nearest")
+    @GetMapping("/near")
     @ResponseStatus(HttpStatus.OK)
     fun getNearest(
         @RequestParam("latitude") latitude: Double,
