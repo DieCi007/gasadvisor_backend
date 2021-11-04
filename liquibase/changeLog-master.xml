@@ -9,4 +9,5 @@
    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
 
 
+ <include file='changeSets/20211104201002-create-db.xml' relativeToChangelogFile='true'/>
 </databaseChangeLog>

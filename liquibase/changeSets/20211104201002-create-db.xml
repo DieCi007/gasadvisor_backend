@@ -1,0 +1,190 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="diego" id="20211104201002-create-db">
+        <sql>
+            CREATE TABLE `unresolved_gas_station`
+            (
+                `id`          bigint(20) NOT NULL AUTO_INCREMENT,
+                `is_resolved` bit(1)       DEFAULT NULL,
+                `value`       varchar(500) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `gas_station`
+            (
+                `id`           bigint(20) NOT NULL,
+                `address`      varchar(255) DEFAULT NULL,
+                `flag`         varchar(255) DEFAULT NULL,
+                `latitude`     double NOT NULL,
+                `longitude`    double NOT NULL,
+                `municipality` varchar(255) DEFAULT NULL,
+                `name`         varchar(255) DEFAULT NULL,
+                `owner`        varchar(255) DEFAULT NULL,
+                `province`     varchar(255) DEFAULT NULL,
+                `type`         varchar(255) DEFAULT NULL,
+                `status`       varchar(255) DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `modified_gas_station`
+            (
+                `id`           bigint(20) NOT NULL AUTO_INCREMENT,
+                `address`      varchar(255) DEFAULT NULL,
+                `flag`         varchar(255) DEFAULT NULL,
+                `latitude`     double       DEFAULT NULL,
+                `longitude`    double       DEFAULT NULL,
+                `municipality` varchar(255) DEFAULT NULL,
+                `name`         varchar(255) DEFAULT NULL,
+                `owner`        varchar(255) DEFAULT NULL,
+                `province`     varchar(255) DEFAULT NULL,
+                `status`       varchar(255) DEFAULT NULL,
+                `type`         varchar(255) DEFAULT NULL,
+                `station_id`   bigint(20) NOT NULL,
+                PRIMARY KEY (`id`),
+                FOREIGN KEY (`station_id`) REFERENCES `gas_station` (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `gas_price`
+            (
+                `description`    varchar(200) NOT NULL,
+                `is_self`        bit(1)       NOT NULL,
+                `read_date`      datetime     NOT NULL,
+                `price`          double       NOT NULL,
+                `gas_station_id` bigint(20) NOT NULL,
+                PRIMARY KEY (`description`, `gas_station_id`, `is_self`, `read_date`),
+                FOREIGN KEY (`gas_station_id`) REFERENCES `gas_station` (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `province`
+            (
+                `id`   bigint(20) NOT NULL AUTO_INCREMENT,
+                `name` varchar(255) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_province_name` (`name`) USING HASH
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `municipality`
+            (
+                `id`          bigint(20) NOT NULL AUTO_INCREMENT,
+                `name`        varchar(255) NOT NULL,
+                `province_id` bigint(20) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `UKm96dfge8vk1bx89nqkecd27wc` (`name`,`province_id`) USING HASH,
+                FOREIGN KEY (`province_id`) REFERENCES `province` (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `fuel_min_price`
+            (
+                `id`        bigint(20) NOT NULL AUTO_INCREMENT,
+                `min_price` double       NOT NULL,
+                `type`      varchar(255) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_fuel_type_min_price` (`type`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `explicit_fuel_type`
+            (
+                `id`          bigint(20) NOT NULL AUTO_INCREMENT,
+                `common_type` varchar(255) DEFAULT NULL,
+                `name`        varchar(255) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_fuel_type_name` (`name`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `privilege`
+            (
+                `name`        varchar(100) NOT NULL,
+                `description` varchar(255) NOT NULL,
+                PRIMARY KEY (`name`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `role`
+            (
+                `name` varchar(100) NOT NULL,
+                PRIMARY KEY (`name`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `role_has_privilege`
+            (
+                `role_id`      varchar(100) NOT NULL,
+                `privilege_id` varchar(100) NOT NULL,
+                PRIMARY KEY (`role_id`, `privilege_id`),
+                KEY            `fk_role_has_privilege_privilege1` (`privilege_id`),
+                FOREIGN KEY (`privilege_id`) REFERENCES `privilege` (`name`),
+                FOREIGN KEY (`role_id`) REFERENCES `role` (`name`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `user`
+            (
+                `id`        bigint(20) NOT NULL AUTO_INCREMENT,
+                `password`  varchar(255) NOT NULL,
+                `username`  varchar(20)  NOT NULL,
+                `role_name` varchar(100) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_username` (`username`),
+                FOREIGN KEY (`role_name`) REFERENCES role (name)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `gas_stat`
+            (
+                `id`                             bigint(20) NOT NULL AUTO_INCREMENT,
+                `date`                           datetime NOT NULL,
+                `least_stations_municipality_id` bigint(20) DEFAULT NULL,
+                `least_stations_province_id`     bigint(20) DEFAULT NULL,
+                `most_stations_municipality_id`  bigint(20) DEFAULT NULL,
+                `most_stations_province_id`      bigint(20) DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                FOREIGN KEY (`least_stations_municipality_id`) REFERENCES `municipality` (`id`),
+                FOREIGN KEY (`most_stations_municipality_id`) REFERENCES `municipality` (`id`),
+                FOREIGN KEY (`least_stations_province_id`) REFERENCES `province` (`id`),
+                FOREIGN KEY (`most_stations_province_id`) REFERENCES `province` (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `province_stat`
+            (
+                `id`                             bigint(20) NOT NULL AUTO_INCREMENT,
+                `date`                           datetime NOT NULL,
+                `province_id`                    bigint(20) DEFAULT NULL,
+                `most_stations_municipality_id`  bigint(20) DEFAULT NULL,
+                `least_stations_municipality_id` bigint(20) DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                FOREIGN KEY (`least_stations_municipality_id`) REFERENCES `municipality` (`id`),
+                FOREIGN KEY (`most_stations_municipality_id`) REFERENCES `municipality` (`id`),
+                FOREIGN KEY (`province_id`) REFERENCES `province` (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE TABLE `price_stat`
+            (
+                `id`               bigint(20) NOT NULL AUTO_INCREMENT,
+                `fuel_type`        varchar(255) NOT NULL,
+                `price`            double DEFAULT NULL,
+                `price_stat_type`  varchar(255) NOT NULL,
+                `gas_stat_id`      bigint(20) DEFAULT NULL,
+                `province_stat_id` bigint(20) DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                FOREIGN KEY (`gas_stat_id`) REFERENCES `gas_stat` (`id`),
+                FOREIGN KEY (`province_stat_id`) REFERENCES `province_stat` (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        </sql>
+        <rollback>
+            DROP TABLE price_stat;
+            DROP TABLE gas_stat;
+            DROP TABLE province_stat;
+            DROP TABLE user;
+            DROP TABLE role_has_privilege;
+            DROP TABLE privilege;
+            DROP TABLE role;
+            DROP TABLE unresolved_gas_station;
+            DROP TABLE modified_gas_station;
+            DROP TABLE gas_price;
+            DROP TABLE gas_station;
+            DROP TABLE municipality;
+            DROP TABLE province;
+            DROP TABLE fuel_min_price;
+            DROP TABLE explicit_fuel_type;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

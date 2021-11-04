@@ -11,7 +11,7 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
 
-    @Column(length = 20, nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     var username: String,
 
     @NotBlank
@@ -21,6 +21,7 @@ class User(
 
     @NotBlank
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "role_name")
     var role: Role
 
 )
