@@ -1,0 +1,24 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="diego" id="20211105200625-add-roles">
+        <sql>
+            INSERT INTO `role` (`name`)
+            VALUES ('ADMIN'),
+                   ('GUEST');
+
+            INSERT INTO `role_has_privilege` (`role_id`, `privilege_id`)
+            VALUES ('ADMIN', 'READ_ALL'),
+                   ('ADMIN', 'WRITE_ALL'),
+                   ('GUEST', 'READ_ALL');
+
+        </sql>
+        <rollback>
+            DELETE FROM `role_has_privilege` WHERE role_id = 'ADMIN';
+            DELETE FROM `role_has_privilege` WHERE role_id = 'GUEST';
+            DELETE FROM `role` WHERE name = 'ADMIN';
+            DELETE FROM `role` WHERE name = 'GUEST';
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

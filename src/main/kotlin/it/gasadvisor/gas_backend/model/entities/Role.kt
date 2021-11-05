@@ -23,7 +23,6 @@ class Role(
 
 enum class RoleName {
     ADMIN,
-    END_USER,
     GUEST,
     UNDEFINED
 }

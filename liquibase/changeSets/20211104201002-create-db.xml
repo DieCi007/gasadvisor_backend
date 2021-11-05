@@ -54,7 +54,7 @@
                 `price`          double       NOT NULL,
                 `gas_station_id` bigint(20) NOT NULL,
                 PRIMARY KEY (`description`, `gas_station_id`, `is_self`, `read_date`),
-                FOREIGN KEY (`gas_station_id`) REFERENCES `gas_station` (`id`)
+                KEY `fk_gas_price_gas_station` (`gas_station_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
             CREATE TABLE `province`

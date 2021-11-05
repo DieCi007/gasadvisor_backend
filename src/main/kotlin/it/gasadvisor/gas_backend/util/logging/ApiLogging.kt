@@ -16,7 +16,7 @@ class ApiLogging {
             "called method {} in {} passing arguments {}",
             point.signature.name,
             point.target.toString(),
-            point.args
+            if (point.args.size > 10) "more than 10 args, not logging" else point.args
         )
     }
 

@@ -1,0 +1,21 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="diego" id="20211105195549-default-fuel-min-prices">
+        <sql>
+            INSERT INTO `fuel_min_price` (`min_price`, `type`)
+            VALUES (0.8, 'GASOLIO'),
+                   (0.2, 'GPL'),
+                   (0.2, 'METANO'),
+                   (0.8, 'BENZINA');
+
+        </sql>
+        <rollback>
+            DELETE FROM `fuel_min_price` WHERE type = 'GASOLIO';
+            DELETE FROM `fuel_min_price` WHERE type = 'GPL';
+            DELETE FROM `fuel_min_price` WHERE type = 'METANO';
+            DELETE FROM `fuel_min_price` WHERE type = 'BENZINA';
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
