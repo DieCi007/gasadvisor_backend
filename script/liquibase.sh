@@ -1,6 +1,25 @@
 #!/bin/bash
-
 set -e
+
+function usage() {
+  echo "Usage: $0 [-u <db_username>] [-p <db_password>] remote <update|rollbackCount>"
+  exit 1
+}
+
+while getopts ":u:p:" o; do
+  case "${o}" in
+  u)
+    dbuser=${OPTARG}
+    ;;
+  p)
+    dbpassword=${OPTARG}
+    ;;
+  *)
+    usage
+    ;;
+  esac
+done
+shift $((OPTIND - 1))
 
 # config
 
@@ -12,7 +31,7 @@ function liquibase() {
     --username="$dbuser" \
     --password="$dbpassword" \
     --url="$dburl" \
-    --classpath="liquibase/lib/mysql-connector-java-5.1.38.jar" \
+    --classpath="liquibase/lib/mysql-connector-java-8.0.27.jar" \
     --driver="com.mysql.jdbc.Driver" \
     --logLevel="info" \
     $*
@@ -27,13 +46,12 @@ function execute() {
   liquibase $*
 }
 
-set -e
 cd $(dirname $0)/..
 
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <local|remote> <liquibase command>"
   echo "Example: $0 local update"
-  echo "Example: $0 remote rollbackCount 1"
+  echo "Example: $0 -u <db_username> -p <db_password> remote rollbackCount 1"
   exit 1
 fi
 
@@ -59,16 +77,21 @@ local)
   execute $*
   ;;
 remote)
-  if [ -z "${REMOTE_DB_USER}" -o -z "${REMOTE_DB_PASSWORD}" -o -z "${REMOTE_DB_SCHEMA}" -o -z "${REMOTE_DB_HOST}" ]; then
-    echo "Please specify all the following in config file: REMOTE_DB_USER, REMOTE_DB_PASSWORD, REMOTE_DB_SCHEMA, REMOTE_DB_HOST"
+
+  if [ -z "${REMOTE_DB_SCHEMA}" -o -z "${REMOTE_DB_HOST}" ]; then
+    echo "Please specify all the following in config file: REMOTE_DB_SCHEMA, REMOTE_DB_HOST"
     exit 1
   fi
 
+  if [ -z "${dbuser}" -o -z "${dbpassword}" ]; then
+    usage
+  fi
+
   dbname="$REMOTE_DB_SCHEMA"
-  dbuser="$REMOTE_DB_USER"
-  dbpassword="$REMOTE_DB_PASSWORD"
   dbhost="$REMOTE_DB_HOST"
 
+  echo $dbuser
+  echo $dbpassword
   execute $*
   ;;
 *)
