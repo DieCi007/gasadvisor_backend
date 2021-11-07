@@ -32,7 +32,7 @@ function create_db() {
   echo "grant all on $db.* to '$LOCAL_DB_USER'@'$LOCAL_DB_HOST' identified by '$LOCAL_DB_PASSWORD';" | do_mysql
   echo "PERMISSIONS GRANTED FOR USER '$LOCAL_DB_USER' AND DATABASE '$db' "
 
-  java -jar liquibase/lib/liquibase-core-3.5.3.jar \
+  java -jar liquibase/lib/liquibase-core-4.3.5.jar \
     --changeLogFile="$changeLogFile" \
     --username="$LOCAL_DB_USER" \
     --password="$LOCAL_DB_PASSWORD" \

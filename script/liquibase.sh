@@ -34,12 +34,12 @@ function liquibase() {
     ;;
   esac
 
-  java -jar liquibase/lib/liquibase-core-3.5.3.jar \
+  java -jar liquibase/lib/liquibase-core-4.3.5.jar \
     --changeLogFile="liquibase/changeLog-master.xml" \
     --username="$dbuser" \
     --password="$dbpassword" \
     --url="$dburl" \
-    --classpath="liquibase/lib/mysql-connector-java-5.1.38.jar" \
+    --classpath="liquibase/lib/${connector}" \
     --driver="com.mysql.jdbc.Driver" \
     --logLevel="info" \
     $*
