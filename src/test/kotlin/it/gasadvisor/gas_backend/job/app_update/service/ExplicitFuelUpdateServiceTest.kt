@@ -6,10 +6,7 @@ import it.gasadvisor.gas_backend.repository.GasPriceRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentCaptor
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.*
 
@@ -24,16 +21,18 @@ internal class ExplicitFuelUpdateServiceTest {
     @InjectMocks
     lateinit var service: ExplicitFuelUpdateService
 
+    @Captor
+    lateinit var captor: ArgumentCaptor<List<ExplicitFuelType>>
+
     @Test
     fun `should work`() {
         whenever(priceRepository.findNotSavedFuelTypes())
             .thenReturn(listOf("one", "two"))
-        val captor = ArgumentCaptor.forClass(ExplicitFuelType::class.java)
-        whenever(fuelRepository.save(any())).then { i -> i.getArgument<ExplicitFuelType>(0) }
+//        whenever(fuelRepository.save(any())).then { i -> i.getArgument<ExplicitFuelType>(0) }
         service.update()
-        verify(fuelRepository, times(2)).save(captor.capture())
-        assertEquals(captor.firstValue.name, "one")
-        assertEquals(captor.secondValue.name, "two")
+        verify(fuelRepository, times(1)).saveAll(capture(captor))
+        assertEquals(captor.firstValue[0].name, "one")
+        assertEquals(captor.firstValue[1].name, "two")
     }
 
     private fun <T> any(): T = Mockito.any()

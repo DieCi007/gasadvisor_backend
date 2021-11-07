@@ -11,8 +11,8 @@ class ModifiedGasStationUpdateService @Autowired constructor(
     private val stationRepo: GasStationRepository,
     private val modifiedStationRepo: ModifiedGasStationRepository
 ) : StatUpdateService<GasStation>() {
-    override fun save(feature: GasStation): GasStation {
-        return stationRepo.save(feature)
+    override fun save(features: List<GasStation>) {
+        stationRepo.saveAll(features)
     }
 
     override fun buildFeatures(): List<GasStation> {

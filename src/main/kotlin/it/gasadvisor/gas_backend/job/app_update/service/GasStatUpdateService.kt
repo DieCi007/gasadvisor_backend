@@ -19,8 +19,8 @@ class GasStatUpdateService @Autowired constructor(
     private val priceStatRepository: PriceStatRepository
 ) : StatUpdateService<GasStat>() {
 
-    override fun save(feature: GasStat): GasStat {
-        return gasStatRepository.save(feature)
+    override fun save(features: List<GasStat>) {
+        gasStatRepository.saveAll(features)
     }
 
     override fun buildFeatures(): List<GasStat> {
@@ -51,38 +51,46 @@ class GasStatUpdateService @Autowired constructor(
             municipalityMostStations, provinceLeastStation,
             municipalityLeastStation, emptyList()
         )
-        gasStat = save(gasStat)
+        try {
+            gasStat = gasStatRepository.save(gasStat)
+        } catch (e: Exception) {
+            log.error("Could not save gasStat with date: {}, error: {}", gasStat.date, e)
+        }
+
         CommonFuelType.values()
             .forEach {
                 val iPriceStat = gasPriceRepository.findPriceStat(it, null, null)
-                priceStatRepository.saveAll(
-                    listOf(
-                        PriceStat(
-                            null,
-                            it,
-                            iPriceStat.getAvg(),
-                            PriceStatType.AVG,
-                            gasStat,
-                            null
-                        ),
-                        PriceStat(
-                            null,
-                            it,
-                            iPriceStat.getMax(),
-                            PriceStatType.MAX,
-                            gasStat,
-                            null
-                        ),
-                        PriceStat(
-                            null,
-                            it,
-                            iPriceStat.getMin(),
-                            PriceStatType.MIN,
-                            gasStat,
-                            null
-                        )
+                val priceList = listOf(
+                    PriceStat(
+                        null,
+                        it,
+                        iPriceStat.getAvg(),
+                        PriceStatType.AVG,
+                        gasStat,
+                        null
+                    ),
+                    PriceStat(
+                        null,
+                        it,
+                        iPriceStat.getMax(),
+                        PriceStatType.MAX,
+                        gasStat,
+                        null
+                    ),
+                    PriceStat(
+                        null,
+                        it,
+                        iPriceStat.getMin(),
+                        PriceStatType.MIN,
+                        gasStat,
+                        null
                     )
                 )
+                try {
+                    priceStatRepository.saveAll(priceList)
+                } catch (e: Exception) {
+                    log.error("Could not save price list for gasStat with date: {}, error: {}", gasStat.date, e)
+                }
             }
         return emptyList()
     }

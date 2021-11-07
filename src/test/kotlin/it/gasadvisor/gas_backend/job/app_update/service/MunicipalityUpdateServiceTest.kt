@@ -9,13 +9,9 @@ import it.gasadvisor.gas_backend.repository.contract.IMunicipalityProvince
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentCaptor
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import org.mockito.kotlin.*
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -32,6 +28,9 @@ internal class MunicipalityUpdateServiceTest {
     @InjectMocks
     lateinit var service: MunicipalityUpdateService
 
+    @Captor
+    lateinit var captor: ArgumentCaptor<List<Municipality>>
+
     @Test
     fun `update should work`() {
         val province = Province(null, "MI", emptySet())
@@ -47,11 +46,10 @@ internal class MunicipalityUpdateServiceTest {
             }))
         whenever(provinceRepository.findByName("MI"))
             .thenReturn(Optional.of(province))
-        val municipalityCaptor = ArgumentCaptor.forClass(Municipality::class.java)
-        whenever(municipalityRepository.save(any())).then { i -> i.getArgument<Municipality>(0) }
+
         service.update()
-        verify(municipalityRepository).save(municipalityCaptor.capture())
-        assertTrue(municipalityCaptor.value.name == "CO")
+        verify(municipalityRepository, times(1)).saveAll(capture(captor))
+        assertTrue(captor.firstValue[0].name == "CO")
     }
 
     private fun <T> any(): T = Mockito.any()

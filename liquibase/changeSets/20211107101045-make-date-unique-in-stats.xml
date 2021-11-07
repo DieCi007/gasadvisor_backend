@@ -8,7 +8,7 @@
                 ADD CONSTRAINT `date_unique` UNIQUE (`date`);
 
             ALTER TABLE `province_stat`
-                ADD CONSTRAINT `date_unique` UNIQUE (`date`);
+                ADD CONSTRAINT `date_province_unique` UNIQUE (`date`, `province_id`);
 
         </sql>
         <rollback>
@@ -16,7 +16,7 @@
             DROP CONSTRAINT `date_unique`;
 
             ALTER TABLE `province_stat`
-            DROP CONSTRAINT `date_unique`;
+            DROP CONSTRAINT `date_province_unique`;
         </rollback>
     </changeSet>
 </databaseChangeLog>

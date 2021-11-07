@@ -14,8 +14,8 @@ class ProvinceUpdateService @Autowired constructor(
 ) : StatUpdateService<Province>() {
     companion object : Log()
 
-    override fun save(feature: Province): Province {
-        return provinceRepository.save(feature)
+    override fun save(features: List<Province>) {
+        provinceRepository.saveAll(features)
     }
 
     override fun buildFeatures(): List<Province> {

@@ -12,8 +12,8 @@ class ExplicitFuelUpdateService @Autowired constructor(
     private val priceRepository: GasPriceRepository
 ) : StatUpdateService<ExplicitFuelType>() {
 
-    override fun save(feature: ExplicitFuelType): ExplicitFuelType {
-        return fuelRepository.save(feature)
+    override fun save(features: List<ExplicitFuelType>) {
+        fuelRepository.saveAll(features)
     }
 
     override fun buildFeatures(): List<ExplicitFuelType> {

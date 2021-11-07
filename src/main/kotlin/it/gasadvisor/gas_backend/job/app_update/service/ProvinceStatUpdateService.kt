@@ -18,8 +18,8 @@ class ProvinceStatUpdateService @Autowired constructor(
     private val priceStatRepository: PriceStatRepository,
     private val municipalityRepository: MunicipalityRepository
 ) : StatUpdateService<ProvinceStat>() {
-    override fun save(feature: ProvinceStat): ProvinceStat {
-        return provinceStatRepository.save(feature)
+    override fun save(features: List<ProvinceStat>) {
+        provinceStatRepository.saveAll(features)
     }
 
     override fun buildFeatures(): List<ProvinceStat> {
@@ -39,38 +39,48 @@ class ProvinceStatUpdateService @Autowired constructor(
             ).orElse(null)
 
             var provinceStat = ProvinceStat(date, municipalityMostStations, municipalityLeastStations, p)
-            provinceStat = save(provinceStat)
+
+            try {
+                provinceStat = provinceStatRepository.save(provinceStat)
+            } catch (e: Exception) {
+                log.error("Could not save province stat with date: {}, error: {}", provinceStat.date, e)
+                return@forEach
+            }
             val priceList = CommonFuelType.values()
                 .map {
                     val iPriceStat = priceRepository.findPriceStat(it, p.name, null)
-                        listOf(
-                            PriceStat(
-                                null,
-                                it,
-                                iPriceStat.getAvg(),
-                                PriceStatType.AVG,
-                                null,
-                                provinceStat
-                            ),
-                            PriceStat(
-                                null,
-                                it,
-                                iPriceStat.getMin(),
-                                PriceStatType.MIN,
-                                null,
-                                provinceStat
-                            ),
-                            PriceStat(
-                                null,
-                                it,
-                                iPriceStat.getMax(),
-                                PriceStatType.MAX,
-                                null,
-                                provinceStat
-                            )
+                    listOf(
+                        PriceStat(
+                            null,
+                            it,
+                            iPriceStat.getAvg(),
+                            PriceStatType.AVG,
+                            null,
+                            provinceStat
+                        ),
+                        PriceStat(
+                            null,
+                            it,
+                            iPriceStat.getMin(),
+                            PriceStatType.MIN,
+                            null,
+                            provinceStat
+                        ),
+                        PriceStat(
+                            null,
+                            it,
+                            iPriceStat.getMax(),
+                            PriceStatType.MAX,
+                            null,
+                            provinceStat
+                        )
                     )
                 }.flatten()
-            priceStatRepository.saveAll(priceList)
+            try {
+                priceStatRepository.saveAll(priceList)
+            } catch (e: Exception) {
+                log.error("Could not save price list for province stat with date: {}. Error: {}", provinceStat.date, e)
+            }
         }
         return emptyList()
     }
