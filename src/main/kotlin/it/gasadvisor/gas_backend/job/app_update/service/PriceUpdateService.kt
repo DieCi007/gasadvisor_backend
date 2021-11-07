@@ -72,7 +72,11 @@ class PriceUpdateService @Autowired constructor(
     }
 
     override fun saveAll(list: List<GasPrice>) {
-        return service.saveAll(list)
+        try {
+            service.saveAll(list)
+        } catch (e: Exception) {
+            log.error("Error during price batch save, {}", e)
+        }
     }
 
     override fun handleDirtyLine(line: String) {}

@@ -51,13 +51,17 @@ class GasStationUpdateService @Autowired constructor(
     }
 
     override fun saveAll(list: List<GasStation>) {
-        service.saveAll(list)
+        try {
+            service.saveAll(list)
+        } catch (e: Exception) {
+            log.error("Error during gas station batch save, {}", e)
+        }
     }
 
     override fun handleDirtyLine(line: String) {
         val saved = unresolvedStations.find { it.value == line }
         if (saved == null) {
-            unresolvedService.save(UnresolvedGasStation(line,false))
+            unresolvedService.save(UnresolvedGasStation(line, false))
             log.info("Saved unresolved gas station")
         }
     }

@@ -13,10 +13,9 @@ class ApiLogging {
     @Before("execution(* it.gasadvisor.gas_backend.api..*(..))")
     fun log(point: JoinPoint) {
         log.info(
-            "called method {} in {} passing arguments {}",
+            "called method {} in {}",
             point.signature.name,
-            point.target.toString(),
-            if (point.args.size > 10) "more than 10 args, not logging" else point.args
+            point.target.toString()
         )
     }
 

@@ -26,12 +26,20 @@ shift $((OPTIND - 1))
 source $(dirname $0)/config.conf
 
 function liquibase() {
+  connector=mysql-connector-java-8.0.27.jar
+
+  case "$env" in
+  local)
+    connector=mysql-connector-java-5.1.38.jar
+    ;;
+  esac
+
   java -jar liquibase/lib/liquibase-core-3.5.3.jar \
     --changeLogFile="liquibase/changeLog-master.xml" \
     --username="$dbuser" \
     --password="$dbpassword" \
     --url="$dburl" \
-    --classpath="liquibase/lib/mysql-connector-java-8.0.27.jar" \
+    --classpath="liquibase/lib/mysql-connector-java-5.1.38.jar" \
     --driver="com.mysql.jdbc.Driver" \
     --logLevel="info" \
     $*

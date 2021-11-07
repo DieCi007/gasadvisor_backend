@@ -13,4 +13,5 @@
  <include file='changeSets/20211105195549-default-fuel-min-prices.xml' relativeToChangelogFile='true'/>
  <include file='changeSets/20211105200312-add-privileges.xml' relativeToChangelogFile='true'/>
  <include file='changeSets/20211105200625-add-roles.xml' relativeToChangelogFile='true'/>
+ <include file='changeSets/20211107101045-make-date-unique-in-stats.xml' relativeToChangelogFile='true'/>
 </databaseChangeLog>

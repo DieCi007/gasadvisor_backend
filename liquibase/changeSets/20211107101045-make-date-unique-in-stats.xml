@@ -1,0 +1,22 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet author="diego" id="20211107101045-make-date-unique-in-stats">
+        <sql>
+            ALTER TABLE `gas_stat`
+                ADD CONSTRAINT `date_unique` UNIQUE (`date`);
+
+            ALTER TABLE `province_stat`
+                ADD CONSTRAINT `date_unique` UNIQUE (`date`);
+
+        </sql>
+        <rollback>
+            ALTER TABLE `gas_stat`
+            DROP CONSTRAINT `date_unique`;
+
+            ALTER TABLE `province_stat`
+            DROP CONSTRAINT `date_unique`;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
