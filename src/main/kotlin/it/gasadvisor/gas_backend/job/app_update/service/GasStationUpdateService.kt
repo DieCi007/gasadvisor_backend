@@ -54,7 +54,7 @@ class GasStationUpdateService @Autowired constructor(
         try {
             service.saveAll(list)
         } catch (e: Exception) {
-            log.error("Error during gas station batch save, {}", e)
+            log.error("Error during gas station batch save, {}", e.message)
         }
     }
 

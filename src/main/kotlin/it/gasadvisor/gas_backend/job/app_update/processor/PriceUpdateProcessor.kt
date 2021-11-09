@@ -26,8 +26,22 @@ class PriceUpdateProcessor @Autowired constructor(
             val bufferedReader = BufferedReader(inputStreamReader)
             priceUpdateService.handle(bufferedReader)
         } catch (e: Exception) {
-            log.info("Exception during gas price update")
+            log.info("Exception during gas price update, will retry")
+            log.error(e.message, e)
+            retry()
+        }
+    }
+
+    private fun retry() {
+        try {
+            val url = URL(endpoint)
+            val inputStreamReader = InputStreamReader(url.openStream())
+            val bufferedReader = BufferedReader(inputStreamReader)
+            priceUpdateService.handle(bufferedReader)
+        } catch (e: Exception) {
+            log.info("Second try error while updating gas stations")
             log.error(e.message, e)
         }
     }
+
 }

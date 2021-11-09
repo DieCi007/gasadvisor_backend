@@ -54,7 +54,7 @@ class GasStatUpdateService @Autowired constructor(
         try {
             gasStat = gasStatRepository.save(gasStat)
         } catch (e: Exception) {
-            log.error("Could not save gasStat with date: {}, error: {}", gasStat.date, e)
+            log.error("Could not save gasStat with date: {}, error: {}", gasStat.date, e.message)
         }
 
         CommonFuelType.values()
@@ -89,7 +89,7 @@ class GasStatUpdateService @Autowired constructor(
                 try {
                     priceStatRepository.saveAll(priceList)
                 } catch (e: Exception) {
-                    log.error("Could not save price list for gasStat with date: {}, error: {}", gasStat.date, e)
+                    log.error("Could not save price list for gasStat with date: {}, error: {}", gasStat.date, e.message)
                 }
             }
         return emptyList()

@@ -43,7 +43,7 @@ class ProvinceStatUpdateService @Autowired constructor(
             try {
                 provinceStat = provinceStatRepository.save(provinceStat)
             } catch (e: Exception) {
-                log.error("Could not save province stat with date: {}, error: {}", provinceStat.date, e)
+                log.error("Could not save province stat with date: {}, error: {}", provinceStat.date, e.message)
                 return@forEach
             }
             val priceList = CommonFuelType.values()
@@ -79,7 +79,7 @@ class ProvinceStatUpdateService @Autowired constructor(
             try {
                 priceStatRepository.saveAll(priceList)
             } catch (e: Exception) {
-                log.error("Could not save price list for province stat with date: {}. Error: {}", provinceStat.date, e)
+                log.error("Could not save price list for province stat with date: {}. Error: {}", provinceStat.date, e.message)
             }
         }
         return emptyList()

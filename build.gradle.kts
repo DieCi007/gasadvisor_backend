@@ -47,6 +47,7 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
 
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+    runtimeOnly ("mysql:mysql-connector-java")
 
     implementation("org.slf4j:slf4j-api")
     implementation("ch.qos.logback:logback-classic")

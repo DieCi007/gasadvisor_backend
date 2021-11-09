@@ -18,7 +18,7 @@ abstract class StatUpdateService<T> {
                 try {
                     save(updateList)
                 } catch (e: Exception) {
-                    log.error("Batch save error, {}", e)
+                    log.error("Batch save error, {}", e.message)
                 }
             }
         }

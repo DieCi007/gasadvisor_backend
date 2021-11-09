@@ -75,7 +75,7 @@ class PriceUpdateService @Autowired constructor(
         try {
             service.saveAll(list)
         } catch (e: Exception) {
-            log.error("Error during price batch save, {}", e)
+            log.error("Error during price batch save, {}", e.message)
         }
     }
 
