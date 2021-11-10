@@ -32,8 +32,8 @@ class ProvinceStat(
 ) {
     constructor(date: Instant, province: Province) : this(null, date, emptyList(), null, null, province)
     constructor(
-        date: Instant, mostStationsMunicipality: Municipality,
-        leastStationsMunicipality: Municipality, province: Province
+        date: Instant, mostStationsMunicipality: Municipality?,
+        leastStationsMunicipality: Municipality?, province: Province
     ) :
             this(null, date, emptyList(), mostStationsMunicipality, leastStationsMunicipality, province)
 }
